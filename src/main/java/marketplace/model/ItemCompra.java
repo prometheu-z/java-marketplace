@@ -2,11 +2,8 @@ package marketplace.model;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+
 @Entity
 public class ItemCompra {
     @Id
@@ -46,5 +43,54 @@ public class ItemCompra {
         return this.quantidade * this.valorAtual;
 
 
+    }
+
+
+    public Long getId_itemVenda() {
+        return id_itemVenda;
+    }
+
+    public void setId_itemVenda(Long id_itemVenda) {
+        this.id_itemVenda = id_itemVenda;
+    }
+
+    public Compra getCompra() {
+        return compra;
+    }
+
+    public void setCompra(Compra compra) {
+        this.compra = compra;
+    }
+
+    public Vendedor getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(Vendedor vendedor) {
+        this.vendedor = vendedor;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public Double getValorAtual() {
+        return valorAtual;
+    }
+
+    public void setValorAtual(Double valorAtual) {
+        this.valorAtual = valorAtual;
     }
 }
