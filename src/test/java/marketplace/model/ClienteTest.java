@@ -4,8 +4,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClienteTest {
 
@@ -43,21 +42,65 @@ public class ClienteTest {
 
 
     @Test
-    void AdicionarCliente(){
+    void adicionarCliente(){
 
         Cliente cliente = new Cliente("Gabriel", "bielzin@gmail.com", "algo123");
 
         em.persist(cliente);
         em.getTransaction().commit();
 
-        em.close();
+        Cliente cBusca = em.find(Cliente.class, cliente.getId());
+
+        assertNotNull(cBusca);
+
+
+    }
+
+    @Test
+    void removerCliente(){
+
+        Cliente cliente = new Cliente("Gabriel", "bielzin@gmail.com", "algo123");
+
+        em.persist(cliente);
+        em.flush();
+
+        em.clear();
+
+        Cliente cRemov = em.find(Cliente.class, cliente.getId());
+        em.remove(cRemov);
+        em.getTransaction().commit();
+
+        Cliente cBusca = em.find(Cliente.class, cliente.getId());
+
+        assertNull(cBusca);
+
+    }
+
+    @Test
+    void updateCliente(){
+        Cliente cliente = new Cliente("Gabriel", "bielzin@gmail.com", "algo123");
+
+        em.persist(cliente);
+        em.flush();
+
+        em.clear();
+
+        Cliente cUpdate = em.find(Cliente.class, cliente.getId());
+
+        cUpdate.setNome("Atlas");
+        cUpdate.setEmail("Atlas@gmail.com");
+        em.getTransaction().commit();
 
         Cliente cBusca = em.find(Cliente.class, cliente.getId());
 
         assertNotNull(cBusca);
-        assertEquals("Gabriel", cliente.getNome());
+        assertEquals("Atlas", cBusca.getNome());
+
+
 
     }
+
+
 
 
 }
