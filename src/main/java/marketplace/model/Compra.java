@@ -1,14 +1,11 @@
 package marketplace.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Setter
-@Getter
+
 @Entity
 public class Compra {
 
@@ -63,4 +60,52 @@ public class Compra {
 
     }
 
+
+    public Long getId_compra() {
+        return id_compra;
+    }
+
+    public void setId_compra(Long id_compra) {
+        this.id_compra = id_compra;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public LocalDateTime getHorario() {
+        return horario;
+    }
+
+    public void setHorario(LocalDateTime horario) {
+        this.horario = horario;
+    }
+
+    public List<ItemCompra> getItens() {
+        return itens;
+    }
+
+    public void setItens(List<ItemCompra> itens) {
+        this.itens = itens;
+    }
+
+    public Double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    public Boolean getCompraAtiva() {
+        return compraAtiva;
+    }
+
+    public void setCompraAtiva(Boolean compraAtiva) {
+        this.compraAtiva = compraAtiva;
+    }
 }
