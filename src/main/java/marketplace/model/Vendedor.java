@@ -1,9 +1,14 @@
 package marketplace.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
 public class Vendedor {
 
@@ -20,69 +25,38 @@ public class Vendedor {
     @Column(nullable = false)
     private String senha;
 
-    @OneToMany(mappedBy = "id_prod")
-    private List<Produto> estoque;
+    @OneToMany(mappedBy = "vendedor",cascade = CascadeType.ALL)
+    private List<Produto> estoque = new ArrayList<>();
 
-    @OneToMany(mappedBy = "id_venda")
-    private List<Venda> vendas;
+    @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL)
+    private List<ItemCompra> itemvendas = new ArrayList<>();
 
 
     public Vendedor() {
     }
 
-    public Vendedor(List<Venda> vendas, List<Produto> estoque, String senha, String cnpj, String nomeLoja) {
-        this.vendas = vendas; // vendas nulo, no set
-        this.estoque = estoque; // estoque nulo, no set
+    public Vendedor(String nomeLoja, String senha, String cnpj) {
         this.senha = senha;
         this.cnpj = cnpj;
         this.nomeLoja = nomeLoja;
     }
 
-    public Long getId() {
-        return id;
+    public void adicionarEstoque(Produto produto){
+        this.estoque.add(produto);
+        produto.setVendedor(this);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void adicionarVendas(ItemCompra itemCompra){
+        this.itemvendas.add(itemCompra);
+        itemCompra.setVendedor(this);
     }
 
-    public String getNomeLoja() {
-        return nomeLoja;
+    public void removerEstoque(Produto produto){
+        this.estoque.remove(produto);
     }
 
-    public void setNomeLoja(String nomeLoja) {
-        this.nomeLoja = nomeLoja;
+    public void removerVendas(ItemCompra itemCompra){
+        this.itemvendas.remove(itemCompra);
     }
 
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public List<Produto> getEstoque() {
-        return estoque;
-    }
-
-    public void setEstoque(List<Produto> estoque) {
-        this.estoque = estoque;
-    }
-
-    public List<Venda> getVendas() {
-        return vendas;
-    }
-
-    public void setVendas(List<Venda> vendas) {
-        this.vendas = vendas;
-    }
 }

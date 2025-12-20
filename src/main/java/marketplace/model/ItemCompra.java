@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class ItemVenda {
+public class ItemCompra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_itemVenda;
@@ -31,10 +31,10 @@ public class ItemVenda {
     @Column(nullable = false)
     private Double valorAtual;
 
-    public ItemVenda() {
+    public ItemCompra() {
     }
 
-    public ItemVenda(Compra compra, Produto produto, int quantidade) {
+    public ItemCompra(Compra compra, Produto produto, int quantidade) {
         produto.getVendedor().adicionarVendas(this);
         this.compra = compra;
         this.produto = produto;

@@ -2,7 +2,14 @@ package marketplace.model;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Setter
+@Getter
 @Entity
 public class Cliente {
 
@@ -16,48 +23,54 @@ public class Cliente {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, insertable = false)
+    @Column(nullable = false)
     private String senha;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Compra> compras = new ArrayList<>();
 
     public Cliente() {
     }
 
     public Cliente(String nome, String email, String senha) {
-        this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
     }
 
-    public Long getId() {
-        return id;
+    public void comprarProduto(Produto  produto, int quantidade){
+
+        Compra carrinhoAtual = null;
+
+        // TO DO: substituir por um jpql
+        for (Compra c : this.compras) {
+            if (c.getCompraAtiva()) {
+                carrinhoAtual = c;
+                break;
+            }
+        }
+
+        if (carrinhoAtual == null) {
+            carrinhoAtual = new Compra(this);
+            this.compras.add(carrinhoAtual);
+        }
+        carrinhoAtual.adicionarItem(produto, quantidade);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void finalizarCompra(){
+        Compra carrinhoAtual = null;
+
+        // TO DO: substituir por um jpql
+        for (Compra c : this.compras) {
+            if (c.getCompraAtiva()) {
+                carrinhoAtual = c;
+                break;
+            }
+        }
+        assert carrinhoAtual != null;
+        carrinhoAtual.finalizarCompra();
+
+
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 }
