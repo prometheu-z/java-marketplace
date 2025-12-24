@@ -31,7 +31,8 @@ public class Compra {
     private Boolean compraAtiva;
 
 
-
+    public Compra() {
+    }
 
     public Compra(Cliente cliente) {
         this.cliente = cliente;

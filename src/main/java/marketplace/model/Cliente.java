@@ -65,7 +65,9 @@ public class Cliente {
                 break;
             }
         }
-        assert carrinhoAtual != null;
+        if(carrinhoAtual == null) {
+            //add exception
+        }
         carrinhoAtual.finalizarCompra();
 
 

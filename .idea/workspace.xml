@@ -5,21 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a55a69f7-7bdd-40e2-af89-482a9384b9c9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/ClientesDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/DAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/MainTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MainTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/ClientesDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/ClientesDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/DAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Cliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Cliente.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Compra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Compra.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/ItemCompra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/ItemCompra.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Produto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Produto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Vendedor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Vendedor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/marketplace/model/ClienteTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/marketplace/model/ClienteTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,9 +48,6 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="MavenRunner">
-    <option name="delegateBuildToMaven" value="true" />
-  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -70,40 +59,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.MainTest.executor&quot;: &quot;Run&quot;,
-    &quot;Application.test.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ClienteTest.adicionarCliente.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ClienteTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ClienteTest.removerUsuario.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ProdutoTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ProdutoTest.updateProduto.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.MainTest.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.java-marketplace [clean,install...].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.java-marketplace [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.java-marketplace [compile].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.java-marketplace [install...].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.java-marketplace [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.java-marketplace [test].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.java-marketplace [verify].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.test.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/dao&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/gabri/OneDrive/Documentos/java-marketplace&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/gabri/OneDrive/Documentos/java-marketplace/src/main/java/org/examples/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.runner&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "Application.MainTest.executor": "Run",
+    "Application.test.executor": "Run",
+    "JUnit.ClienteTest.adicionarCliente.executor": "Run",
+    "JUnit.ClienteTest.executor": "Run",
+    "JUnit.ClienteTest.fazerCompra.executor": "Run",
+    "JUnit.ClienteTest.removerUsuario.executor": "Run",
+    "JUnit.ProdutoTest.executor": "Run",
+    "JUnit.ProdutoTest.updateProduto.executor": "Run",
+    "Maven.Main.executor": "Run",
+    "Maven.MainTest.executor": "Run",
+    "Maven.java-marketplace [clean,install...].executor": "Run",
+    "Maven.java-marketplace [clean].executor": "Run",
+    "Maven.java-marketplace [compile].executor": "Run",
+    "Maven.java-marketplace [install...].executor": "Run",
+    "Maven.java-marketplace [install].executor": "Run",
+    "Maven.java-marketplace [test].executor": "Run",
+    "Maven.java-marketplace [verify].executor": "Run",
+    "Maven.test.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "feature/dao",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/gabri/OneDrive/Documentos/java-marketplace",
+    "onboarding.tips.debug.path": "C:/Users/gabri/OneDrive/Documentos/java-marketplace/src/main/java/org/examples/Main.java",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\gabri\OneDrive\Documentos\java-marketplace\src\main\resources" />
@@ -114,7 +104,7 @@
       <recent name="marketplace.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="marketplace.Main" />
       <module name="java-marketplace" />
@@ -141,17 +131,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ClienteTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ClienteTest.fazerCompra" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="java-marketplace" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value=".*" />
+          <option name="PATTERN" value="marketplace.model.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="marketplace.model" />
       <option name="MAIN_CLASS_NAME" value="marketplace.model.ClienteTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="METHOD_NAME" value="fazerCompra" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -189,11 +180,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ClienteTest.fazerCompra" />
         <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.ProdutoTest.updateProduto" />
         <item itemvalue="Application.test" />
         <item itemvalue="JUnit.ProdutoTest" />
-        <item itemvalue="JUnit.ClienteTest" />
       </list>
     </recent_temporary>
   </component>
