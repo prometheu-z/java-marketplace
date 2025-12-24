@@ -5,14 +5,13 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 public class DAO <E> {
 
-    private static EntityManagerFactory emf;
-    private EntityManager em;
-    private Class<E> classe;
+    protected static final EntityManagerFactory emf;
+    protected final EntityManager em;
+    protected final Class<E> classe;
 
     static {
         //TO DO try catch
@@ -35,7 +34,9 @@ public class DAO <E> {
 
         return this;
     }
-    public DAO<E> persistir(E... objetos){
+
+    @SafeVarargs
+    public final DAO<E> persistir(E... objetos){
         for(E obj : objetos){
             em.persist(obj);
         }
@@ -44,13 +45,28 @@ public class DAO <E> {
     public DAO<E> fechar(){
         em.getTransaction().commit();
         return this;
+
     }
 
     public void finalizar(){
         em.close();
     }
 
-    public List<E> buscarI(int quantidade, int deslocamento){
+
+    //Crud
+
+    public DAO<E> incluirAtomico(E entidade){
+        if(em.getTransaction().isActive()){
+            em.getTransaction().rollback();
+        }
+
+        return this.iniciar().persistir(entidade).fechar();
+
+    }
+
+
+
+    public List<E> buscarID(int quantidade, int deslocamento){
         
         if(classe == null){
             throw new UnsupportedOperationException("Classe nula");

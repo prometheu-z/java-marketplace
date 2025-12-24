@@ -1,9 +1,10 @@
 package marketplace;
 
+import marketplace.dao.ClientesDAO;
 import marketplace.dao.DAO;
-import marketplace.model.Cliente;
-import marketplace.model.Produto;
-import marketplace.model.Vendedor;
+import marketplace.model.*;
+
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -29,6 +30,7 @@ public class Main {
 
 
         c.comprarProduto(p1, 1);
+        c.finalizarCompra();
         c.comprarProduto(p3, 2);
         c.comprarProduto(p2, 3);
 
@@ -39,6 +41,21 @@ public class Main {
 
 
         daoV.iniciar().persistir(v,v2,c).fechar();
+
+        ClientesDAO dao = new ClientesDAO();
+
+        List<Compra> compras = dao.getUltimasCompras(c);
+
+        for (Compra compra : compras){
+            System.out.println("----------------------------------");
+            System.out.println(compra.getId_compra()+"      cliente: "+compra.getCliente().getNome()+"  valor total:"+compra.getValorTotal());
+            System.out.println("itens        quant       valor");
+            for (ItemCompra i : compra.getItens()){
+                System.out.println(i.getProduto().getNome()+"      "+i.getQuantidade()+"      "+i.getSubTotal());
+            }
+            System.out.println("---------------------------------- ");
+
+        }
 
 
 
