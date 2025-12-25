@@ -10,8 +10,8 @@ import java.util.List;
 public class DAO <E> {
 
     protected static final EntityManagerFactory emf;
-    protected final EntityManager em;
-    protected final Class<E> classe;
+    protected  EntityManager em;
+    protected  Class<E> classe;
 
     static {
         //TO DO try catch
@@ -19,14 +19,19 @@ public class DAO <E> {
     }
 
 
-    public DAO(){
-        this(null);
 
-    }
+
     public DAO(Class<E> classe){
         this.classe = classe;
-        em = emf.createEntityManager();
+        this.em = emf.createEntityManager();
 
+    }
+    public void setEntity(EntityManager em) {
+        this.em = em;
+    }
+
+    public static EntityManager criarEM(){
+        return emf.createEntityManager();
     }
 
     public DAO<E> iniciar(){
@@ -47,6 +52,16 @@ public class DAO <E> {
         return this;
 
     }
+    public DAO<E> merge(E entidade){
+        em.merge(entidade);
+        return this;
+    }
+
+    public void rollback(){
+        if(em.getTransaction().isActive()){
+            em.getTransaction().rollback();
+        }
+    }
 
     public void finalizar(){
         em.close();
@@ -66,19 +81,18 @@ public class DAO <E> {
 
 
 
-    public List<E> buscarID(int quantidade, int deslocamento){
-        
-        if(classe == null){
-            throw new UnsupportedOperationException("Classe nula");
-        }
+    public E buscarPorId(Long id){
 
-        String jpql = "select e from "+ classe.getName()+" e";
-        TypedQuery<E> result = em.createQuery(jpql,classe);
+        return em.find(classe, id);
 
-        return result
-                .setFirstResult(quantidade)
-                .setMaxResults(deslocamento)
-                .getResultList();
+
     }
 
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
 }

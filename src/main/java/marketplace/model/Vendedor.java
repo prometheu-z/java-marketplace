@@ -43,6 +43,7 @@ public class Vendedor {
         produto.setVendedor(this);
     }
 
+
     public void adicionarVendas(ItemCompra itemCompra){
         this.itemvendas.add(itemCompra);
         itemCompra.setVendedor(this);

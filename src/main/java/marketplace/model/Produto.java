@@ -20,7 +20,7 @@ public class Produto {
     @Column(nullable = false)
     private int quantidade;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "id_vendedor")
     private Vendedor vendedor;
 
@@ -29,6 +29,7 @@ public class Produto {
     }
 
     public Produto(String nome, Double valorUnitario, int quantidade) {
+
         this.nome = nome;
         this.valorUnitario = valorUnitario;
         this.quantidade = quantidade;
