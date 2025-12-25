@@ -13,8 +13,7 @@ public class Compra {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_compra;
 
-    //TO  DO: ver as implicancias do cascate
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 
@@ -36,15 +35,21 @@ public class Compra {
 
     public Compra(Cliente cliente) {
         this.cliente = cliente;
-
         this.compraAtiva = true;
     }
 
 
     public void adicionarItem(Produto produto, Integer quantidade) {
 
-        ItemCompra item = new ItemCompra(this, produto, quantidade);
+        for(ItemCompra item : this.itens){
+            if(item.getProduto().getId_prod().equals(produto.getId_prod())){
+                item.setQuantidade(item.getQuantidade() + quantidade);
 
+                this.valorTotal += (produto.getValorUnitario()*quantidade);
+                return;
+            }
+        }
+        ItemCompra item = new ItemCompra(this, produto, quantidade);
         this.itens.add(item);
         this.valorTotal += item.getSubTotal();
     }
@@ -54,7 +59,7 @@ public class Compra {
         this.valorTotal -= item.getSubTotal();
     }
 
-    // adicionar exceçaso de venda vazia
+    // adicionar exceçao de venda vazia
     public void finalizarCompra(){
         this.horario = LocalDateTime.now();
         this.compraAtiva = false;

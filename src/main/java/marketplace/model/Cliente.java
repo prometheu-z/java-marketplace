@@ -2,10 +2,14 @@ package marketplace.model;
 
 
 import jakarta.persistence.*;
+import marketplace.dao.ClientesDAO;
 
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -35,44 +39,6 @@ public class Cliente {
         this.email = email;
         this.senha = senha;
     }
-
-    public void comprarProduto(Produto  produto, int quantidade){
-
-        Compra carrinhoAtual = null;
-
-        // TO DO: substituir por um jpql
-        for (Compra c : this.compras) {
-            if (c.getCompraAtiva()) {
-                carrinhoAtual = c;
-                break;
-            }
-        }
-
-        if (carrinhoAtual == null) {
-            carrinhoAtual = new Compra(this);
-            this.compras.add(carrinhoAtual);
-        }
-        carrinhoAtual.adicionarItem(produto, quantidade);
-    }
-
-    public void finalizarCompra(){
-        Compra carrinhoAtual = null;
-
-        // TO DO: substituir por um jpql
-        for (Compra c : this.compras) {
-            if (c.getCompraAtiva()) {
-                carrinhoAtual = c;
-                break;
-            }
-        }
-        if(carrinhoAtual == null) {
-            //add exception
-        }
-        carrinhoAtual.finalizarCompra();
-
-
-    }
-
 
     public Long getId() {
         return id;

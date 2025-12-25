@@ -14,7 +14,7 @@ public class ItemCompra {
     @JoinColumn(name = "id_compra")
     private Compra compra;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "id_vendedor")
     private Vendedor vendedor;
 
@@ -32,17 +32,15 @@ public class ItemCompra {
     }
 
     public ItemCompra(Compra compra, Produto produto, int quantidade) {
-        produto.getVendedor().adicionarVendas(this);
         this.compra = compra;
         this.produto = produto;
         this.quantidade = quantidade;
         this.valorAtual = produto.getValorUnitario();
+        this.vendedor = produto.getVendedor();
     }
 
     public Double getSubTotal(){
         return this.quantidade * this.valorAtual;
-
-
     }
 
 

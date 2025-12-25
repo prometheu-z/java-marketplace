@@ -6,13 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a55a69f7-7bdd-40e2-af89-482a9384b9c9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/ClientesDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/ClientesDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/DAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Cliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Cliente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Compra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Compra.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/marketplace/model/ClienteTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/marketplace/model/ClienteTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
