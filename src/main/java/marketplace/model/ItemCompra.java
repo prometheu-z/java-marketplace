@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 
 @Entity
-public class ItemCompra {
+public class ItemCompra extends EntidadeBD{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_itemVenda;

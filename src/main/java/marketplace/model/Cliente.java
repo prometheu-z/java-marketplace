@@ -13,7 +13,7 @@ import java.util.Objects;
 
 
 @Entity
-public class Cliente {
+public class Cliente extends EntidadeBD {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

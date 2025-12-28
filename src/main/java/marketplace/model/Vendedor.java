@@ -7,7 +7,7 @@ import java.util.List;
 
 
 @Entity
-public class Vendedor {
+public class Vendedor extends EntidadeBD{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

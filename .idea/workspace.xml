@@ -5,7 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a55a69f7-7bdd-40e2-af89-482a9384b9c9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/EntidadeBD.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/view/VendedorView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/ClientesDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/ClientesDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/CompraDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/CompraDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/DAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Cliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Cliente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Compra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Compra.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/ItemCompra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/ItemCompra.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Produto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Produto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Vendedor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Vendedor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/service/CompraService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/service/CompraService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/service/VendasService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/service/VendasService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/marketplace/model/CompraTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/marketplace/model/CompraTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +76,7 @@
     "JUnit.ClienteTest.executor": "Run",
     "JUnit.ClienteTest.fazerCompra.executor": "Run",
     "JUnit.ClienteTest.removerUsuario.executor": "Run",
+    "JUnit.CompraTest.itemPeloProduto.executor": "Run",
     "JUnit.ProdutoTest.executor": "Run",
     "JUnit.ProdutoTest.updateProduto.executor": "Run",
     "Maven.Main.executor": "Run",
@@ -140,17 +156,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProdutoTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="CompraTest.itemPeloProduto" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="java-marketplace" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value=".*" />
+          <option name="PATTERN" value="marketplace.model.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="marketplace.model" />
-      <option name="MAIN_CLASS_NAME" value="marketplace.model.ProdutoTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="MAIN_CLASS_NAME" value="marketplace.model.CompraTest" />
+      <option name="METHOD_NAME" value="itemPeloProduto" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -173,11 +190,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.ClienteTest.fazerCompra" />
+        <item itemvalue="JUnit.CompraTest.itemPeloProduto" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.ClienteTest.fazerCompra" />
         <item itemvalue="JUnit.ProdutoTest.updateProduto" />
         <item itemvalue="Application.test" />
-        <item itemvalue="JUnit.ProdutoTest" />
       </list>
     </recent_temporary>
   </component>

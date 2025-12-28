@@ -7,7 +7,7 @@ import java.util.*;
 
 
 @Entity
-public class Compra {
+public class Compra extends EntidadeBD{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

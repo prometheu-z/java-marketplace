@@ -1,7 +1,9 @@
 package marketplace;
 
 import marketplace.dao.ClientesDAO;
+import marketplace.dao.CompraDAO;
 import marketplace.dao.DAO;
+import marketplace.dao.ProdutoDAO;
 import marketplace.model.*;
 import marketplace.service.CompraService;
 import marketplace.service.VendasService;
@@ -17,6 +19,9 @@ public class Main {
 
 
         DAO<Object> daoV = new DAO<>(Object.class);
+        CompraDAO daok = new CompraDAO();
+        ClientesDAO daoc = new ClientesDAO();
+        ProdutoDAO daop = new ProdutoDAO();
         CompraService compra = new CompraService();
         VendasService venda = new VendasService();
         ClienteView view = new ClienteView();
@@ -29,17 +34,22 @@ public class Main {
         venda.criarProduto(v.getId(), "tesoura", 5.0, 8);
         venda.criarProduto(v2.getId(), "cola", 12.0, 6);
         venda.criarProduto(v2.getId(), "tesoura", 5.0, 8);
+        venda.excluirProduto(v.getId(), 3L);
 
 
 
         compra.adicionarProduto(c.getId(), 1L, 1);
-        compra.adicionarProduto(c.getId(), 3L, 2);
+        compra.adicionarProduto(c.getId(), 3L, 2); //add produto excluido
         compra.adicionarProduto(c.getId(), 2L, 3);
         compra.adicionarProduto(c.getId(), 1L, 4);
         compra.adicionarProduto(c.getId(), 4L, 5);
-        compra.removerProduto(c.getId(), 3L);
+        compra.removerProduto(c.getId(), 1L);
+
+
 
         compra.finalizarCompra(c);
+
+
 
         view.gerarNotaFiscal(c);
 

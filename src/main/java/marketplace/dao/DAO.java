@@ -3,9 +3,7 @@ package marketplace.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
-
-import java.util.List;
+import marketplace.model.EntidadeBD;
 
 public class DAO <E> {
 
@@ -52,15 +50,16 @@ public class DAO <E> {
         return this;
 
     }
-    public DAO<E> merge(E entidade){
+    public void merge(E entidade){
         em.merge(entidade);
-        return this;
     }
 
-    public void rollback(){
-        if(em.getTransaction().isActive()){
-            em.getTransaction().rollback();
+    public void remover(EntidadeBD entidade){
+        if(!em.contains(entidade)){
+           em.merge(entidade);
         }
+        entidade.setAtivo(false);
+
     }
 
     public void finalizar(){
@@ -92,7 +91,4 @@ public class DAO <E> {
         return em;
     }
 
-    public void setEm(EntityManager em) {
-        this.em = em;
-    }
 }
