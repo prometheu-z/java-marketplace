@@ -62,7 +62,7 @@ public class CompraService {
             }
 
             Produto produto = daoP.buscarPorId(idProduto);
-            if(produto == null){
+            if(produto == null || !produto.isAtivo()){
                 throw new IllegalArgumentException("produto n encontrado");
             }
 
@@ -86,22 +86,26 @@ public class CompraService {
         }
     }
 
+
     public void finalizarCompra(Cliente cliente){
         abreTransacao();
 
         Compra carrinho = daoC.compraAtiva(cliente);
-
         if(carrinho == null){
             //TODO add exception
             return;
         }
-
         try {
+            for(ItemCompra item : carrinho.getItens()){
+                item.getProduto().addVendas(item.getQuantidade());
+            }
+
             carrinho.finalizarCompra();
             daoK.merge(carrinho);
             fechaTransacao();
         } catch (Exception e) {
             desfazerTransacao();
+            //TODO exception
         }
     }
 
@@ -109,41 +113,41 @@ public class CompraService {
 
         abreTransacao();
 
-        Cliente cliente = daoC.buscarPorId(idCliente);
-        Produto produto = daoP.buscarPorId(idProduto);
-        Compra carrinho = daoC.compraAtiva(cliente);
-
-        if(cliente == null){
-            throw new IllegalArgumentException("Cliente n encontrado");
-        }
-
-        if(produto == null){
-            throw new IllegalArgumentException("produto n encontrado");
-        }
-
-        if(carrinho == null){
-            //TODO add exception
-            return;
-        }
-        ItemCompra itemRemoveer = carrinho.getItens().stream().
-                filter(i-> Objects.equals(i.getProduto().getId_prod(), produto.getId_prod())).
-                findFirst().orElse(null);
-        if(itemRemoveer == null){
-            //TODO add exception
-            return;
-        }
-
-
         try {
-            Produto prod = itemRemoveer.getProduto();
-            prod.setQuantidade(prod.getQuantidade()+itemRemoveer.getQuantidade());
+            Cliente cliente = daoC.buscarPorId(idCliente);
+            Produto produto = daoP.buscarPorId(idProduto);
+            Compra carrinho = daoC.compraAtiva(cliente);
+
+            if(cliente == null){
+                throw new IllegalArgumentException("Cliente n encontrado");
+            }
+
+            if(produto == null){
+                throw new IllegalArgumentException("produto n encontrado");
+            }
+
+            if(carrinho == null){
+                //TODO add exception
+                return;
+            }
+            ItemCompra itemRemover = daoK.itemPeloProduto(carrinho, idProduto);
+            if(itemRemover == null){
+                //TODO add exception
+                return;
+            }
+
+
+
+            Produto prod = itemRemover.getProduto();
+            prod.setQuantidade(prod.getQuantidade()+itemRemover.getQuantidade());
             daoP.merge(prod);
 
-            carrinho.removerItem(itemRemoveer);
+            carrinho.removerItem(itemRemover);
 
             daoK.merge(carrinho);
 
             fechaTransacao();
+
         }catch(Exception e){
             desfazerTransacao();
             //TODO add exception
@@ -151,7 +155,7 @@ public class CompraService {
 
         }
 
-        carrinho.removerItem(itemRemoveer);
+
 
     }
 

@@ -21,7 +21,6 @@ public class ClientesDAO extends DAO<Cliente> {
 
     }
     public Compra compraAtiva(Cliente cliente){
-        System.out.println("coloquei");
         String jpql = "select c from Compra c left join fetch c.itens where c.cliente = :cliente and c.compraAtiva = true";
 
         List<Compra> result = em.createQuery(jpql, Compra.class).setParameter("cliente", cliente).

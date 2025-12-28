@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 
 @Entity
-public class Produto {
+public class Produto extends EntidadeBD{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,9 @@ public class Produto {
     @ManyToOne()
     @JoinColumn(name = "id_vendedor")
     private Vendedor vendedor;
+
+
+    private int vendas = 0;
 
 
     public Produto() {
@@ -74,5 +77,13 @@ public class Produto {
 
     public void setVendedor(Vendedor vendedor) {
         this.vendedor = vendedor;
+    }
+
+    public int getVendas() {
+        return vendas;
+    }
+
+    public void addVendas(int vendas) {
+        this.vendas = vendas++;
     }
 }
