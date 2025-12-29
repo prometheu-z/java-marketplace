@@ -28,6 +28,9 @@ public class ItemCompra extends EntidadeBD{
     @Column(nullable = false)
     private Double valorAtual;
 
+    @Column(nullable = false)
+    private String nomeProdAtual;
+
     public ItemCompra() {
     }
 
@@ -35,6 +38,7 @@ public class ItemCompra extends EntidadeBD{
         this.compra = compra;
         this.produto = produto;
         this.quantidade = quantidade;
+        this.nomeProdAtual = produto.getNome();
         this.valorAtual = produto.getValorUnitario();
         this.vendedor = produto.getVendedor();
     }
@@ -88,7 +92,7 @@ public class ItemCompra extends EntidadeBD{
         return valorAtual;
     }
 
-    public void setValorAtual(Double valorAtual) {
-        this.valorAtual = valorAtual;
+    public String getNomeProdAtual() {
+        return nomeProdAtual;
     }
 }

@@ -11,12 +11,19 @@ public class VendedorDAO extends DAO<Vendedor> {
     public VendedorDAO() {
         super(Vendedor.class);
     }
+    public Long numProdutos(Vendedor vendedor){
+        String jpql = "select Count(p) from Produto p where p.vendedor.id = :vendedor and p.ativo = true";
 
-    public List<Produto> itensDoEstoque(Vendedor vendedor){
-        String jpql = "select p from produto p where p.vendedor = :vendedor";
+        return em.createQuery(jpql, Long.class).setParameter("vendedor", vendedor.getId()).getSingleResult();
+    }
+
+    public List<Produto> itensDoEstoque(Vendedor vendedor, int inicio, int quantidade){
+        String jpql = "select p from Produto p where p.vendedor.id = :vendedor and p.ativo = true order by p.vendas desc";
 
         return em.createQuery(jpql, Produto.class).
                 setParameter("vendedor", vendedor.getId()).
+                setFirstResult(inicio).
+                setMaxResults(quantidade).
                 getResultList();
     }
 

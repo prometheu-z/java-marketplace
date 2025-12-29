@@ -84,6 +84,6 @@ public class Produto extends EntidadeBD{
     }
 
     public void addVendas(int vendas) {
-        this.vendas = vendas++;
+        this.vendas = getVendas()+vendas;
     }
 }

@@ -13,11 +13,16 @@ public class ClientesDAO extends DAO<Cliente> {
     }
 
 
-    public List<Compra> getUltimasCompras(Cliente cliente, int quantidade){
+    public List<Compra> getUltimasCompras(Cliente cliente,int inicio, int quantidade){
         String jpql = "select c from Compra c where c.cliente = :cliente order by c.horario desc";
 
-        return em.createQuery(jpql, Compra.class).setParameter("cliente", cliente).
+        return em.createQuery(jpql, Compra.class).setParameter("cliente", cliente).setFirstResult(inicio).
                 setMaxResults(quantidade).getResultList();
+
+    }
+    public Long numCompras(Cliente cliente){
+        String jpql = "select Count(c) from Compra c where c.cliente.id= :cliente";
+        return em.createQuery(jpql, Long.class).setParameter("cliente", cliente.getId()).getSingleResult();
 
     }
     public Compra compraAtiva(Cliente cliente){
@@ -32,9 +37,6 @@ public class ClientesDAO extends DAO<Cliente> {
         return result.getFirst();
     }
 
-//    public ItemCompra itemPeloProduto(Produto produto){
-//        String jpql = "select "
-//    }
 
 
 
