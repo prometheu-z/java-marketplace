@@ -5,22 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a55a69f7-7bdd-40e2-af89-482a9384b9c9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/EntidadeBD.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/view/VendedorView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/ClientesDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/ClientesDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/CompraDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/CompraDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/DAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Cliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Cliente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Compra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Compra.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/VendedorDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/VendedorDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/ItemCompra.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/ItemCompra.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Produto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Produto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Vendedor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Vendedor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/service/CompraService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/service/CompraService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/service/VendasService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/service/VendasService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/marketplace/model/CompraTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/marketplace/model/CompraTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/view/ClienteView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/view/ClienteView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/view/VendedorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/view/VendedorView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +86,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/dao",
+    "git-widget-placeholder": "view",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/gabri/OneDrive/Documentos/java-marketplace",

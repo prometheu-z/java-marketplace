@@ -2,6 +2,7 @@ package marketplace.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import marketplace.model.Cliente;
 import marketplace.model.Compra;
 import marketplace.model.ItemCompra;
 
@@ -24,4 +25,5 @@ public class CompraDAO extends DAO<Compra>{
 
 
     }
+
 }

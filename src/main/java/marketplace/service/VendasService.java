@@ -118,6 +118,8 @@ public class VendasService {
         abreTransacao();
         VendedorView view = new VendedorView();
 
+        //todo criar logica pra decidir se deve criar um novo produto pra mudanças graves ou manter para mudanças minimas de preço e nome
+
         try {
             Vendedor vendedor = daoV.buscarPorId(idVendedor);
             Produto produto = daoP.buscarPorId(idProduto);
