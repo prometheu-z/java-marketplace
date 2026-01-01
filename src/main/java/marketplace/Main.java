@@ -39,6 +39,7 @@ public class Main {
         venda.criarProduto(v2.getId(), "cola", 12.0, 6);
         venda.criarProduto(v2.getId(), "tesoura", 5.0, 8);
 
+        venda.alterarProduto(1L, 1L);
 
 
         //Gerar compras

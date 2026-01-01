@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a55a69f7-7bdd-40e2-af89-482a9384b9c9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/OperacaoVendaException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/VendedorNuloExcception.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/EntradaInvalidaException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/service/VendasService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/service/VendasService.java" afterDir="false" />
@@ -46,6 +45,9 @@
         <option name="jdkForImporter" value="ms-21" />
       </MavenImportingSettings>
     </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4

@@ -3,6 +3,7 @@ package marketplace.service;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import marketplace.dao.*;
+import marketplace.exceptions.EntradaInvalidaException;
 import marketplace.exceptions.OperacaoVendaException;
 import marketplace.exceptions.ProdutoInvalidoException;
 import marketplace.exceptions.VendedorNuloExcception;
@@ -150,11 +151,7 @@ public class VendasService {
             }
 
             Produto produtoAlterado = view.alterarProduto(produto);
-            if(produtoAlterado == null){
-                System.out.println("Operação cancelada");
-                desfazerTransacao();
-                return;
-            }
+
 
             produto.setNome(produtoAlterado.getNome());
             produto.setValorUnitario(produtoAlterado.getValorUnitario());
@@ -164,7 +161,12 @@ public class VendasService {
 
             fechaTransacao();
 
-        }  catch (RuntimeException e){
+        }  catch (EntradaInvalidaException e){
+            desfazerTransacao();
+            System.out.println("Operação cancelada: "+e.getMessage());
+
+        }
+        catch (RuntimeException e){
             desfazerTransacao();
 
             throw e;

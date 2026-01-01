@@ -2,6 +2,7 @@ package marketplace.view;
 
 import marketplace.dao.ClientesDAO;
 import marketplace.dao.CompraDAO;
+import marketplace.exceptions.EntradaInvalidaException;
 import marketplace.model.Cliente;
 import marketplace.model.Compra;
 import marketplace.model.ItemCompra;
@@ -19,18 +20,21 @@ public class ClienteView {
 
     public Cliente criarCliente(){
 
-        //todo exception
-        Scanner ler = new Scanner(System.in);
-        System.out.println("------------ Cadastro --------------");
-        System.out.println("Qual o seu nome:");
-        String nome = ler.nextLine();
-        System.out.println("Qual o seu email:");
-        String email = ler.nextLine();
-        System.out.println("Crie uma senha:");
-        String senha = ler.nextLine();
-        System.out.println("\n  Usuário cadastrado!");
+        try {
+            Scanner ler = new Scanner(System.in);
+            System.out.println("------------ Cadastro --------------");
+            System.out.println("Qual o seu nome:");
+            String nome = ler.nextLine();
+            System.out.println("Qual o seu email:");
+            String email = ler.nextLine();
+            System.out.println("Crie uma senha:");
+            String senha = ler.nextLine();
+            System.out.println("\n  Usuário cadastrado!");
 
-        return new Cliente(nome, email, senha);
+            return new Cliente(nome, email, senha);
+        } catch (Exception e) {
+            throw new EntradaInvalidaException("Entrada de dados inválidos");
+        }
     }
 
     public Cliente alterarCliente(Cliente cliente){
@@ -55,8 +59,7 @@ public class ClienteView {
                     senha.isEmpty() ? cliente.getSenha() : senha);
 
         } catch (Exception e) {
-            //todo add new exception
-            throw new RuntimeException(e);
+            throw new EntradaInvalidaException("Entrada de dados inválidos");
         }
 
     }
