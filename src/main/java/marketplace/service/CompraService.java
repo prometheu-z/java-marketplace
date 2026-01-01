@@ -2,9 +2,11 @@ package marketplace.service;
 
 import jakarta.persistence.EntityManager;
 import marketplace.dao.*;
+import marketplace.exceptions.CarrinhoNuloException;
+import marketplace.exceptions.ClienteInvalidoException;
+import marketplace.exceptions.OperacaoCompraException;
+import marketplace.exceptions.ProdutoInvalidoException;
 import marketplace.model.*;
-
-import java.util.Objects;
 
 public class CompraService {
     private EntityManager em;
@@ -55,17 +57,18 @@ public class CompraService {
         abreTransacao();
 
 
+
         try {
+
             Cliente cliente = daoC.buscarPorId(idCliente);
             if(cliente == null){
-                throw new IllegalArgumentException("Cliente n encontrado");
+                throw new ClienteInvalidoException("Cliente de código: "+ idCliente+" não encontrado");
             }
 
             Produto produto = daoP.buscarPorId(idProduto);
             if(produto == null || !produto.isAtivo()){
-                throw new IllegalArgumentException("produto n encontrado");
+                throw new ProdutoInvalidoException("Produto de código: "+idProduto+" não encontrado ou inativo");
             }
-
 
             Compra carrinho = daoC.compraAtiva(cliente);
             if(carrinho == null){
@@ -80,9 +83,14 @@ public class CompraService {
             daoP.merge(produto);
 
             fechaTransacao();
+        } catch (RuntimeException e){
+            desfazerTransacao();
+
+            throw e;
         } catch (Exception e) {
             desfazerTransacao();
-            //TODO re-lança exception
+
+            throw new OperacaoCompraException("Não foi possível adicionar o produto ao carrinho", e);
         }
     }
 
@@ -90,12 +98,13 @@ public class CompraService {
     public void finalizarCompra(Cliente cliente){
         abreTransacao();
 
-        Compra carrinho = daoC.compraAtiva(cliente);
-        if(carrinho == null){
-            //TODO add exception
-            return;
-        }
+
         try {
+            Compra carrinho = daoC.compraAtiva(cliente);
+            if(carrinho == null){
+                throw new CarrinhoNuloException("O cliente não possui itens no carrinho");
+            }
+
             for(ItemCompra item : carrinho.getItens()){
                 item.getProduto().addVendas(item.getQuantidade());
             }
@@ -103,9 +112,14 @@ public class CompraService {
             carrinho.finalizarCompra();
             daoK.merge(carrinho);
             fechaTransacao();
+        } catch (RuntimeException e){
+            desfazerTransacao();
+
+            throw e;
         } catch (Exception e) {
             desfazerTransacao();
-            //TODO exception
+
+            throw new OperacaoCompraException("Não foi possível finalizar sua compra", e);
         }
     }
 
@@ -115,25 +129,24 @@ public class CompraService {
 
         try {
             Cliente cliente = daoC.buscarPorId(idCliente);
-            Produto produto = daoP.buscarPorId(idProduto);
-            Compra carrinho = daoC.compraAtiva(cliente);
 
             if(cliente == null){
-                throw new IllegalArgumentException("Cliente n encontrado");
+                throw new ClienteInvalidoException("Cliente de código: "+ idCliente+" não encontrado");
             }
 
-            if(produto == null){
-                throw new IllegalArgumentException("produto n encontrado");
+            Produto produto = daoP.buscarPorId(idProduto);
+            if(produto == null || !produto.isAtivo()){
+                throw new ProdutoInvalidoException("Produto de código: "+idProduto+" não encontrado");
             }
 
+            Compra carrinho = daoC.compraAtiva(cliente);
             if(carrinho == null){
-                //TODO add exception
-                return;
+                throw new CarrinhoNuloException("O cliente não possui itens no carrinho");
             }
+
             ItemCompra itemRemover = daoK.itemPeloProduto(carrinho, idProduto);
             if(itemRemover == null){
-                //TODO add exception
-                return;
+                throw new ProdutoInvalidoException("O produto "+produto.getNome()+" não está no seu carrinho");
             }
 
 
@@ -148,10 +161,14 @@ public class CompraService {
 
             fechaTransacao();
 
-        }catch(Exception e){
+        } catch (RuntimeException e){
             desfazerTransacao();
-            //TODO add exception
 
+            throw e;
+        } catch(Exception e){
+            desfazerTransacao();
+
+            throw new OperacaoCompraException("Não foi possível remover o item do carrinho", e);
 
         }
 
