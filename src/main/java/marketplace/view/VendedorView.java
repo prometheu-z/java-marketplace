@@ -113,6 +113,7 @@ public class VendedorView {
             if(paginaAtual != quantPaginas){
                 System.out.print("[2] avançar");
             }
+            //todo opcoes pra adicionar ou remover produtos
             System.out.println("\n[3] sair");
             System.out.print("O que você quer fazer:");
             int op = ler.nextInt();

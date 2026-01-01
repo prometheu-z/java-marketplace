@@ -3,6 +3,9 @@ package marketplace.service;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import marketplace.dao.*;
+import marketplace.exceptions.OperacaoVendaException;
+import marketplace.exceptions.ProdutoInvalidoException;
+import marketplace.exceptions.VendedorNuloExcception;
 import marketplace.model.Produto;
 import marketplace.model.Vendedor;
 import marketplace.view.VendedorView;
@@ -61,16 +64,16 @@ public class VendasService {
         abreTransacao();
 
         try {
-            Vendedor vendedor = daoV.buscarPorId(idVendedor);
-            if(vendedor == null){
-                //TODO add exception
-                return;
+            if(qtd <= 0 || preco < 0){
+                throw new OperacaoVendaException("Quantidade ou preço inválido para um produto");
             }
 
-            if(qtd <= 0 || preco < 0){
-                //TODO add exception
-                return;
+            Vendedor vendedor = daoV.buscarPorId(idVendedor);
+            if(vendedor == null){
+                throw new VendedorNuloExcception("Vendedor de id: "+idVendedor+", não encontrado");
             }
+
+
 
             Produto produto = new Produto(nomeProd, preco, qtd);
             vendedor.adicionarEstoque(produto);
@@ -79,9 +82,13 @@ public class VendasService {
             daoP.merge(produto);
 
             fechaTransacao();
+        } catch (RuntimeException e) {
+
+            throw e;
         } catch (Exception e) {
             desfazerTransacao();
-            //TODO exception
+
+            throw new OperacaoVendaException("Erro ao criar um produto",e);
         }
     }
     public void excluirProduto(Long idVendedor, Long idProduto){
@@ -89,14 +96,16 @@ public class VendasService {
 
         try {
             Vendedor vendedor = daoV.buscarPorId(idVendedor);
+            if(vendedor == null){
+                throw new VendedorNuloExcception("Vendedor de id: "+idVendedor+", não encontrado");
+            }
+
             Produto produto = daoP.buscarPorId(idProduto);
-            if(vendedor == null || produto == null){
-                //TODO add exception
-                return;
+            if(produto == null){
+                throw new ProdutoInvalidoException("Produto de id: "+  idProduto+", não encontrado");
             }
             if(!produto.getVendedor().getId().equals(vendedor.getId())){
-                //todo exception
-                return;
+                throw new ProdutoInvalidoException("Este produto de id: "+idProduto+", não pertence à esta loja");
             }
 
             vendedor.removerEstoque(produto);
@@ -105,9 +114,14 @@ public class VendasService {
 
             fechaTransacao();
 
+        } catch (RuntimeException e){
+            desfazerTransacao();
+
+            throw e;
         } catch (Exception e) {
             desfazerTransacao();
-            //todo exception
+
+            throw new OperacaoVendaException("Erro ao excluir o produto", e);
 
         }
 
@@ -122,15 +136,19 @@ public class VendasService {
 
         try {
             Vendedor vendedor = daoV.buscarPorId(idVendedor);
+            if(vendedor == null){
+                throw new VendedorNuloExcception("Vendedor de id: "+idVendedor+", não encontrado");
+            }
+
             Produto produto = daoP.buscarPorId(idProduto);
-            if(vendedor == null || produto == null){
-                //TODO add exception
-                return;
+            if(produto == null){
+                throw new ProdutoInvalidoException("Produto de id: "+  idProduto+", não encontrado");
             }
+
             if(!produto.getVendedor().getId().equals(vendedor.getId())){
-                //todo exception
-                return;
+                throw new ProdutoInvalidoException("Este produto de id: "+idProduto+", não pertence à esta loja");
             }
+
             Produto produtoAlterado = view.alterarProduto(produto);
             if(produtoAlterado == null){
                 System.out.println("Operação cancelada");
@@ -146,9 +164,14 @@ public class VendasService {
 
             fechaTransacao();
 
+        }  catch (RuntimeException e){
+            desfazerTransacao();
+
+            throw e;
         } catch (Exception e) {
             desfazerTransacao();
-            //todo exception
+
+            throw new OperacaoVendaException("Não foi possivel alterar o produto", e);
 
         }
 

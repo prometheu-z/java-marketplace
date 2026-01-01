@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a55a69f7-7bdd-40e2-af89-482a9384b9c9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/CarrinhoNuloException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/ClienteInvalidoException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/OperacaoCompraException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/ProdutoInvalidoException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/OperacaoVendaException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/VendedorNuloExcception.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/service/CompraService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/service/CompraService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/service/VendasService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/service/VendasService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/view/VendedorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/view/VendedorView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,8 +181,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.CompraTest.itemPeloProduto" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.CompraTest.itemPeloProduto" />
         <item itemvalue="JUnit.ClienteTest.fazerCompra" />
         <item itemvalue="JUnit.ProdutoTest.updateProduto" />
         <item itemvalue="Application.test" />
