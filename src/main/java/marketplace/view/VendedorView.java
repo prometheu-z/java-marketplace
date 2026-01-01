@@ -1,6 +1,7 @@
 package marketplace.view;
 
 import marketplace.dao.VendedorDAO;
+import marketplace.exceptions.EntradaInvalidaException;
 import marketplace.model.Cliente;
 import marketplace.model.Produto;
 import marketplace.model.Vendedor;
@@ -16,19 +17,22 @@ public class VendedorView {
     public Vendedor criarVendedor(){
 
 
-        //todo exception
-        Scanner ler = new Scanner(System.in);
-        System.out.println("------------ Cadastro --------------");
-        System.out.println("Qual o nome fantasia da sua loja:");
-        String nome = ler.nextLine();
-        //todo exception cnpj
-        System.out.println("Qual o seu cnpj:");
-        String cnpj = ler.nextLine();
-        System.out.println("Crie uma senha:");
-        String senha = ler.nextLine();
-        System.out.println("\n  Loja cadastrado!");
+        try {
+            Scanner ler = new Scanner(System.in);
+            System.out.println("------------ Cadastro --------------");
+            System.out.println("Qual o nome fantasia da sua loja:");
+            String nome = ler.nextLine();
+            //todo "validar" cnpj
+            System.out.println("Qual o seu cnpj:");
+            String cnpj = ler.nextLine();
+            System.out.println("Crie uma senha:");
+            String senha = ler.nextLine();
+            System.out.println("\n  Loja cadastrado!");
 
-        return new Vendedor(nome, cnpj, senha);
+            return new Vendedor(nome, cnpj, senha);
+        } catch (Exception e) {
+            throw new EntradaInvalidaException("Entrada de valores inválidos");
+        }
     }
 
     public Vendedor alterarVendedor(Vendedor vendedor){
@@ -41,20 +45,16 @@ public class VendedorView {
             System.out.print("Qual o novo fantasia:");
             String nome = ler.nextLine();
 
-            System.out.print("Qual o novo cnoj:");
-            String cnpj = ler.nextLine();
-
             System.out.print("Qual a nova senha:");
             String senha = ler.nextLine();
 
             return new Vendedor(
                     nome.isEmpty() ? vendedor.getNomeLoja() : nome,
-                    cnpj.isEmpty() ? cnpj : vendedor.getCnpj(),
+                    vendedor.getCnpj(),
                     senha.isEmpty() ? vendedor.getSenha() : senha);
 
         } catch (Exception e) {
-            //todo add new exception
-            throw new RuntimeException(e);
+            throw new EntradaInvalidaException("Entrada de valores inválidos");
         }
 
     }
@@ -76,9 +76,7 @@ public class VendedorView {
 
             return new Produto(nome, valor, esqtoque);
         } catch (Exception e) {
-            //todo add new exception
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            throw new EntradaInvalidaException("Entrada de valores inválidos");
         }
 
     }
@@ -113,6 +111,7 @@ public class VendedorView {
             if(paginaAtual != quantPaginas){
                 System.out.print("[2] avançar");
             }
+            //todo opcoes pra adicionar ou remover produtos
             System.out.println("\n[3] sair");
             System.out.print("O que você quer fazer:");
             int op = ler.nextInt();
@@ -124,7 +123,11 @@ public class VendedorView {
             else if(op == 2){
                 paginaAtual++;
             }
+            else if(op == 3){
+                break;
+            }
             else {
+                System.out.println("Operação inválida, saindo...");
                 break;
             }
         }

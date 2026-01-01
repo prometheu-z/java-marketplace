@@ -4,6 +4,8 @@ import marketplace.dao.ClientesDAO;
 import marketplace.dao.CompraDAO;
 import marketplace.dao.DAO;
 import marketplace.dao.ProdutoDAO;
+import marketplace.exceptions.CarrinhoNuloException;
+import marketplace.exceptions.ProdutoInvalidoException;
 import marketplace.model.*;
 import marketplace.service.CompraService;
 import marketplace.service.VendasService;
@@ -37,13 +39,18 @@ public class Main {
         venda.criarProduto(v2.getId(), "cola", 12.0, 6);
         venda.criarProduto(v2.getId(), "tesoura", 5.0, 8);
 
+        venda.alterarProduto(1L, 1L);
 
 
         //Gerar compras
         for (int i = 0; i<4; i++) {
 
-            compra.adicionarProduto(c.getId(), 1L, 1);
-            compra.finalizarCompra(c);
+            try {
+                compra.adicionarProduto(c.getId(), 9L, 1);
+                compra.finalizarCompra(c);
+            } catch (CarrinhoNuloException | ProdutoInvalidoException e){
+                System.out.println(e.getMessage());
+            }
 
             compra.adicionarProduto(c.getId(), 3L, 2);
             compra.finalizarCompra(c);
