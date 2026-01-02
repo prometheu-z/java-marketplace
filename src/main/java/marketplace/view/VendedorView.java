@@ -2,6 +2,7 @@ package marketplace.view;
 
 import marketplace.dao.VendedorDAO;
 import marketplace.exceptions.EntradaInvalidaException;
+import marketplace.exceptions.OperacaoVendaException;
 import marketplace.model.Cliente;
 import marketplace.model.Produto;
 import marketplace.model.Vendedor;
@@ -19,15 +20,15 @@ public class VendedorView {
 
         try {
             Scanner ler = new Scanner(System.in);
-            System.out.println("------------ Cadastro --------------");
-            System.out.println("Qual o nome fantasia da sua loja:");
+            System.out.println("------------ CADASTRO --------------");
+            System.out.print("Qual o nome fantasia da sua loja:");
             String nome = ler.nextLine();
             //todo "validar" cnpj
-            System.out.println("Qual o seu cnpj:");
+            System.out.print("Qual o seu cnpj:");
             String cnpj = ler.nextLine();
-            System.out.println("Crie uma senha:");
+            System.out.print("Crie uma senha:");
             String senha = ler.nextLine();
-            System.out.println("\n  Loja cadastrado!");
+            System.out.println("\nLoja cadastrada!");
 
             return new Vendedor(nome, cnpj, senha);
         } catch (Exception e) {
@@ -59,6 +60,26 @@ public class VendedorView {
 
     }
 
+    public Produto criarProduto(){
+
+        try {
+            Scanner ler = new Scanner(System.in);
+            System.out.print("Qual o nome do produto:");
+            String nome = ler.nextLine();
+
+            System.out.print("Qual o preço do produto:");
+            Double preco = ler.nextDouble();
+
+            System.out.print("Qual a quantidade em estoque:");
+            int estoque = ler.nextInt();
+
+            return new Produto(nome, preco, estoque);
+        } catch (Exception e) {
+            throw new EntradaInvalidaException("Entrada de valores inválidos");
+        }
+
+
+    }
     public Produto alterarProduto(Produto produto){
         try {
             Scanner ler = new Scanner(System.in);
@@ -73,6 +94,10 @@ public class VendedorView {
 
             System.out.print("Qual o seu estoque desse produto:");
             int esqtoque = ler.nextInt();
+
+            if(esqtoque <= 0 || valor < 0){
+                throw new OperacaoVendaException("Quantidade ou preço inválido para um produto");
+            }
 
             return new Produto(nome, valor, esqtoque);
         } catch (Exception e) {

@@ -2,20 +2,18 @@ package marketplace.service;
 
 import jakarta.persistence.EntityManager;
 import marketplace.dao.*;
-import marketplace.exceptions.CarrinhoNuloException;
-import marketplace.exceptions.ClienteInvalidoException;
-import marketplace.exceptions.OperacaoCompraException;
-import marketplace.exceptions.ProdutoInvalidoException;
+import marketplace.exceptions.*;
 import marketplace.model.*;
+import marketplace.view.ClienteView;
 
-public class CompraService {
+public class ClienteService {
     private EntityManager em;
 
     private ClientesDAO daoC;
     private CompraDAO daoK;
     private ProdutoDAO daoP;
 
-    public CompraService() {
+    public ClienteService() {
         this.daoP = new ProdutoDAO();
         this.daoK = new CompraDAO();
         this.daoC = new ClientesDAO();
@@ -51,6 +49,66 @@ public class CompraService {
         }
     }
 
+
+    public Cliente criarCliente(){
+        abreTransacao();
+        ClienteView view = new ClienteView();
+        try {
+             Cliente cliente = view.criarCliente();
+             daoC.persistir(cliente);
+
+             fechaTransacao();
+            System.out.println("Cliente "+cliente.getNome()+" adicionado");
+
+            return cliente;
+
+        }catch (EntradaInvalidaException e ){
+            System.out.println("Operaçao cancelada: "+e.getMessage());
+        } catch (RuntimeException e){
+            desfazerTransacao();
+
+            throw e;
+        } catch (Exception e) {
+            desfazerTransacao();
+
+            throw new OperacaoCompraException("Não foi possível fazer o cadastro", e);
+        }
+        return null;
+
+    }
+
+    public void atualizarCliente(Long idCliente){
+        abreTransacao();
+        ClienteView view = new ClienteView();
+
+        try{
+            Cliente cliente = daoC.buscarPorId(idCliente);
+            if(cliente == null){
+                throw new ClienteInvalidoException("Cliente de código: "+ idCliente+" não encontrado");
+            }
+            Cliente novoCliente = view.alterarCliente(cliente);
+
+            cliente.setNome(novoCliente.getNome());
+            cliente.setEmail(novoCliente.getEmail());
+            cliente.setSenha(novoCliente.getSenha());
+
+            daoC.merge(cliente);
+
+            System.out.println("Cliente "+cliente.getNome()+" atualizado");
+
+        }catch (EntradaInvalidaException e){
+            System.out.println("Operação cancelada:"+e.getMessage());
+            desfazerTransacao();
+        } catch (RuntimeException e){
+            desfazerTransacao();
+
+            throw e;
+        }catch (Exception e){
+            desfazerTransacao();
+
+            throw new OperacaoCompraException("Não foi possível adicionar o produto ao carrinho", e);
+        }
+    }
 
 
     public void adicionarProduto(Long idCliente, Long idProduto, int quantidade) {

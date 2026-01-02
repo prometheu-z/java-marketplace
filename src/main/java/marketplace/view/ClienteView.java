@@ -23,13 +23,13 @@ public class ClienteView {
         try {
             Scanner ler = new Scanner(System.in);
             System.out.println("------------ Cadastro --------------");
-            System.out.println("Qual o seu nome:");
+            System.out.print("Qual o seu nome:");
             String nome = ler.nextLine();
-            System.out.println("Qual o seu email:");
+            System.out.print("Qual o seu email:");
             String email = ler.nextLine();
-            System.out.println("Crie uma senha:");
+            System.out.print("Crie uma senha:");
             String senha = ler.nextLine();
-            System.out.println("\n  Usuário cadastrado!");
+            System.out.println("\nUsuário cadastrado!");
 
             return new Cliente(nome, email, senha);
         } catch (Exception e) {
@@ -55,7 +55,7 @@ public class ClienteView {
 
             return new Cliente(
                     nome.isEmpty() ? cliente.getNome() : nome,
-                    email.isEmpty() ? email : cliente.getEmail(),
+                    email.isEmpty() ? cliente.getEmail() : email,
                     senha.isEmpty() ? cliente.getSenha() : senha);
 
         } catch (Exception e) {
