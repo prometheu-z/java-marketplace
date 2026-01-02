@@ -21,14 +21,14 @@ public class VendedorView {
         try {
             Scanner ler = new Scanner(System.in);
             System.out.println("------------ CADASTRO --------------");
-            System.out.println("Qual o nome fantasia da sua loja:");
+            System.out.print("Qual o nome fantasia da sua loja:");
             String nome = ler.nextLine();
             //todo "validar" cnpj
-            System.out.println("Qual o seu cnpj:");
+            System.out.print("Qual o seu cnpj:");
             String cnpj = ler.nextLine();
-            System.out.println("Crie uma senha:");
+            System.out.print("Crie uma senha:");
             String senha = ler.nextLine();
-            System.out.println("\n  Loja cadastrado!");
+            System.out.println("\nLoja cadastrada!");
 
             return new Vendedor(nome, cnpj, senha);
         } catch (Exception e) {

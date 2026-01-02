@@ -63,15 +63,18 @@ public class VendedorService {
     public Vendedor criarVendedor(){
         abreTransacao();
 
+        VendedorView view = new VendedorView();
         try {
-            Vendedor vendedor = criarVendedor();
-            daoV.merge(vendedor);
+            Vendedor vendedor = view.criarVendedor();
+
+            daoV.persistir(vendedor);
 
             fechaTransacao();
 
             System.out.println("Loja "+vendedor.getNomeLoja()+" adicionada");
 
             return vendedor;
+
         }catch (EntradaInvalidaException e){
             System.out.println("Operação cancelada: "+e.getMessage() );
             desfazerTransacao();
@@ -86,6 +89,42 @@ public class VendedorService {
         }
         return null;
     }
+    public void alterarVendedor(Long idVendedor){
+        abreTransacao();
+
+        VendedorView view = new VendedorView();
+        try {
+            Vendedor vendedor = daoV.buscarPorId(idVendedor);
+            if(vendedor == null){
+                throw new VendedorNuloExcception("Vendedor de id: "+idVendedor+", não encontrado");
+            }
+
+            Vendedor novoVendedor = view.alterarVendedor(vendedor);
+
+            vendedor.setSenha(novoVendedor.getSenha());
+            vendedor.setNomeLoja(novoVendedor.getNomeLoja());
+
+            daoV.merge(vendedor);
+
+            fechaTransacao();
+
+            System.out.println("Loja "+vendedor.getNomeLoja()+" atualizada");
+
+
+        }catch (EntradaInvalidaException e){
+            System.out.println("Operação cancelada: "+e.getMessage() );
+            desfazerTransacao();
+        } catch (RuntimeException e){
+            desfazerTransacao();
+
+            throw e;
+        } catch (Exception e){
+            desfazerTransacao();
+
+            throw new OperacaoVendaException("Não foi possível alterar a loja", e);
+        }
+    }
+
     public void criarProduto(Long idVendedor){
 
         abreTransacao();
@@ -180,6 +219,7 @@ public class VendedorService {
 
             daoP.merge(produto);
 
+            System.out.println("Produto "+produto.getNome()+" atualizado");
             fechaTransacao();
 
         }  catch (EntradaInvalidaException e){
