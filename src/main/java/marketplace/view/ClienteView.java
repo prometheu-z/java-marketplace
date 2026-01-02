@@ -55,7 +55,7 @@ public class ClienteView {
 
             return new Cliente(
                     nome.isEmpty() ? cliente.getNome() : nome,
-                    email.isEmpty() ? email : cliente.getEmail(),
+                    email.isEmpty() ? cliente.getEmail() : email,
                     senha.isEmpty() ? cliente.getSenha() : senha);
 
         } catch (Exception e) {

@@ -2,20 +2,18 @@ package marketplace.service;
 
 import jakarta.persistence.EntityManager;
 import marketplace.dao.*;
-import marketplace.exceptions.CarrinhoNuloException;
-import marketplace.exceptions.ClienteInvalidoException;
-import marketplace.exceptions.OperacaoCompraException;
-import marketplace.exceptions.ProdutoInvalidoException;
+import marketplace.exceptions.*;
 import marketplace.model.*;
+import marketplace.view.ClienteView;
 
-public class CompraService {
+public class ClienteService {
     private EntityManager em;
 
     private ClientesDAO daoC;
     private CompraDAO daoK;
     private ProdutoDAO daoP;
 
-    public CompraService() {
+    public ClienteService() {
         this.daoP = new ProdutoDAO();
         this.daoK = new CompraDAO();
         this.daoC = new ClientesDAO();
@@ -49,6 +47,34 @@ public class CompraService {
         if(em!= null && em.isOpen()){
             em.close();
         }
+    }
+
+
+    public Cliente criarCliente(){
+        abreTransacao();
+        ClienteView view = new ClienteView();
+        try {
+             Cliente cliente = view.criarCliente();
+             daoC.merge(cliente);
+
+             fechaTransacao();
+            System.out.println("Cliente "+cliente.getNome()+" adicionado");
+
+            return cliente;
+
+        }catch (EntradaInvalidaException e ){
+            System.out.println("Operaçao cancelada: "+e.getMessage());
+        } catch (RuntimeException e){
+            desfazerTransacao();
+
+            throw e;
+        } catch (Exception e) {
+            desfazerTransacao();
+
+            throw new OperacaoCompraException("Não foi possível fazer o cadastro", e);
+        }
+        return null;
+
     }
 
 

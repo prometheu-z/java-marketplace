@@ -3,12 +3,7 @@ package marketplace.model;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import marketplace.dao.ClientesDAO;
-import marketplace.dao.CompraDAO;
-import marketplace.service.CompraService;
 import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class CompraTest {
 

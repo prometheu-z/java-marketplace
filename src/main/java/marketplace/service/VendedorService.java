@@ -1,6 +1,5 @@
 package marketplace.service;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import marketplace.dao.*;
 import marketplace.exceptions.EntradaInvalidaException;
@@ -11,14 +10,14 @@ import marketplace.model.Produto;
 import marketplace.model.Vendedor;
 import marketplace.view.VendedorView;
 
-public class VendasService {
+public class VendedorService {
     private EntityManager em;
     private ClientesDAO daoC;
     private CompraDAO daoK;
     private VendedorDAO daoV;
     private ProdutoDAO daoP;
 
-    public VendasService() {
+    public VendedorService() {
         this.daoC = new ClientesDAO();
         this.daoK = new CompraDAO();
         this.daoV = new VendedorDAO();
@@ -60,29 +59,54 @@ public class VendasService {
         }
 
     }
-    public void criarProduto(Long idVendedor, String nomeProd, Double preco, int qtd){
 
+    public Vendedor criarVendedor(){
         abreTransacao();
 
         try {
-            if(qtd <= 0 || preco < 0){
-                throw new OperacaoVendaException("Quantidade ou preço inválido para um produto");
-            }
+            Vendedor vendedor = criarVendedor();
+            daoV.merge(vendedor);
+
+            fechaTransacao();
+
+            System.out.println("Loja "+vendedor.getNomeLoja()+" adicionada");
+
+            return vendedor;
+        }catch (EntradaInvalidaException e){
+            System.out.println("Operação cancelada: "+e.getMessage() );
+            desfazerTransacao();
+        } catch (RuntimeException e){
+            desfazerTransacao();
+
+            throw e;
+        } catch (Exception e){
+            desfazerTransacao();
+
+            throw new OperacaoVendaException("Não foi possível criar a loja", e);
+        }
+        return null;
+    }
+    public void criarProduto(Long idVendedor){
+
+        abreTransacao();
+
+        VendedorView view = new VendedorView();
+        try {
 
             Vendedor vendedor = daoV.buscarPorId(idVendedor);
             if(vendedor == null){
                 throw new VendedorNuloExcception("Vendedor de id: "+idVendedor+", não encontrado");
             }
 
-
-
-            Produto produto = new Produto(nomeProd, preco, qtd);
+            Produto produto = view.criarProduto();
             vendedor.adicionarEstoque(produto);
             daoP.persistir(produto);
 
             daoP.merge(produto);
 
             fechaTransacao();
+        } catch (OperacaoVendaException | EntradaInvalidaException e){
+            System.out.println("Operação cancelada: "+e.getMessage());
         } catch (RuntimeException e) {
 
             throw e;
@@ -132,9 +156,6 @@ public class VendasService {
     public void alterarProduto(Long idVendedor, Long idProduto){
         abreTransacao();
         VendedorView view = new VendedorView();
-
-        //todo criar logica pra decidir se deve criar um novo produto pra mudanças graves ou manter para mudanças minimas de preço e nome
-
         try {
             Vendedor vendedor = daoV.buscarPorId(idVendedor);
             if(vendedor == null){
@@ -165,8 +186,7 @@ public class VendasService {
             desfazerTransacao();
             System.out.println("Operação cancelada: "+e.getMessage());
 
-        }
-        catch (RuntimeException e){
+        } catch (RuntimeException e){
             desfazerTransacao();
 
             throw e;

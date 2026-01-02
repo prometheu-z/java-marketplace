@@ -7,30 +7,26 @@ import marketplace.dao.ProdutoDAO;
 import marketplace.exceptions.CarrinhoNuloException;
 import marketplace.exceptions.ProdutoInvalidoException;
 import marketplace.model.*;
-import marketplace.service.CompraService;
-import marketplace.service.VendasService;
+import marketplace.service.ClienteService;
+import marketplace.service.VendedorService;
 import marketplace.view.ClienteView;
 import marketplace.view.VendedorView;
 
-import java.util.List;
-
 public class Main {
     public static void main(String[] args) {
-        Cliente c = new Cliente("marcos", "marquin@gmail.com", "1223");
-        Vendedor v = new Vendedor("Materiais escolares do lu", "22334", "123432");
-        Vendedor v2 = new Vendedor("Fabercastel", "33224", "123432");
 
 
-        DAO<Object> daoV = new DAO<>(Object.class);
-        CompraDAO daok = new CompraDAO();
-        ClientesDAO daoc = new ClientesDAO();
-        ProdutoDAO daop = new ProdutoDAO();
-        CompraService compra = new CompraService();
-        VendasService venda = new VendasService();
+
+
+        ClienteService compra = new ClienteService();
+        VendedorService venda = new VendedorService();
         ClienteView view = new ClienteView();
         VendedorView vv = new VendedorView();
 
-        daoV.iniciar().persistir(v,v2,c).fechar();
+        Cliente c = compra.criarCliente();
+        Vendedor v = venda.criarVendedor();
+        Vendedor v2 = venda.criarVendedor();
+
 
 
         venda.criarProduto(v.getId(), "lapis", 1.20, 20);
