@@ -38,6 +38,10 @@ public class Produto extends EntidadeBD{
         this.quantidade = quantidade;
     }
 
+    public boolean temEstoque(){
+        return this.quantidade > 0;
+    }
+
 
     public Long getId_prod() {
         return id_prod;

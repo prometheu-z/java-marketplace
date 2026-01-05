@@ -192,7 +192,7 @@ public class VendedorService {
 
     }
 
-    public void alterarProduto(Long idVendedor, Long idProduto){
+    public void atualizarProduto(Long idVendedor, Long idProduto){
         abreTransacao();
         VendedorView view = new VendedorView();
         try {
@@ -202,7 +202,7 @@ public class VendedorService {
             }
 
             Produto produto = daoP.buscarPorId(idProduto);
-            if(produto == null){
+            if(produto == null || !produto.isAtivo()){
                 throw new ProdutoInvalidoException("Produto de id: "+  idProduto+", não encontrado");
             }
 
