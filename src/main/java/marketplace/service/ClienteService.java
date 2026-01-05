@@ -124,8 +124,8 @@ public class ClienteService {
             }
 
             Produto produto = daoP.buscarPorId(idProduto);
-            if(produto == null || !produto.isAtivo()){
-                throw new ProdutoInvalidoException("Produto de código: "+idProduto+" não encontrado ou inativo");
+            if(produto == null || produto.temEstoque() || !produto.isAtivo() ){
+                throw new ProdutoInvalidoException("Produto de código: "+idProduto+" não encontrado/inativo ou fora de estoque");
             }
 
             Compra carrinho = daoC.compraAtiva(cliente);

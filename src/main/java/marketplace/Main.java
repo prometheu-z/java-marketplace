@@ -1,9 +1,5 @@
 package marketplace;
 
-import marketplace.dao.ClientesDAO;
-import marketplace.dao.CompraDAO;
-import marketplace.dao.DAO;
-import marketplace.dao.ProdutoDAO;
 import marketplace.exceptions.CarrinhoNuloException;
 import marketplace.exceptions.ProdutoInvalidoException;
 import marketplace.model.*;
@@ -35,7 +31,7 @@ public class Main {
         venda.criarProduto(v2.getId());
         venda.criarProduto(v2.getId());
 
-        venda.alterarProduto(1L, 1L);
+        venda.atualizarProduto(1L, 1L);
 
 
         //Gerar compras
