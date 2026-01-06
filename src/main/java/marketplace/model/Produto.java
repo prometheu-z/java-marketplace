@@ -38,8 +38,8 @@ public class Produto extends EntidadeBD{
         this.quantidade = quantidade;
     }
 
-    public boolean temEstoque(){
-        return this.quantidade > 0;
+    public boolean temEstoque(int quantidade){
+        return this.quantidade-quantidade > 0;
     }
 
 

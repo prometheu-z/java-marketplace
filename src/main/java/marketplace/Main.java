@@ -6,6 +6,7 @@ import marketplace.model.*;
 import marketplace.service.ClienteService;
 import marketplace.service.VendedorService;
 import marketplace.view.ClienteView;
+import marketplace.view.ProdutoView;
 import marketplace.view.VendedorView;
 
 public class Main {
@@ -18,6 +19,7 @@ public class Main {
         VendedorService venda = new VendedorService();
         ClienteView view = new ClienteView();
         VendedorView vv = new VendedorView();
+        ProdutoView pv = new ProdutoView();
 
         Cliente c = compra.criarCliente();
         Vendedor v = venda.criarVendedor();
@@ -59,6 +61,8 @@ public class Main {
             }
 
         }
+        vv.dashProdutos(v);
+        pv.exibirCatalogo();
 
 
         view.mostrarHistorico(c);

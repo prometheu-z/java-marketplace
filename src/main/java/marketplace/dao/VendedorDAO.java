@@ -1,6 +1,5 @@
 package marketplace.dao;
 
-import jakarta.persistence.EntityManager;
 import marketplace.model.Produto;
 import marketplace.model.Vendedor;
 
@@ -11,7 +10,7 @@ public class VendedorDAO extends DAO<Vendedor> {
     public VendedorDAO() {
         super(Vendedor.class);
     }
-    public Long numProdutos(Vendedor vendedor){
+    public Long numProdutosVendedor(Vendedor vendedor){
         String jpql = "select Count(p) from Produto p where p.vendedor.id = :vendedor and p.ativo = true";
 
         return em.createQuery(jpql, Long.class).setParameter("vendedor", vendedor.getId()).getSingleResult();
