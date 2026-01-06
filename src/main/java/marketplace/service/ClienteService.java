@@ -124,7 +124,7 @@ public class ClienteService {
             }
 
             Produto produto = daoP.buscarPorId(idProduto);
-            if(produto == null || produto.temEstoque() || !produto.isAtivo() ){
+            if(produto == null || !produto.temEstoque(quantidade) || !produto.isAtivo() ){
                 throw new ProdutoInvalidoException("Produto de código: "+idProduto+" não encontrado/inativo ou fora de estoque");
             }
 

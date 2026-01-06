@@ -9,10 +9,7 @@ import marketplace.model.ItemCompra;
 import marketplace.model.Produto;
 
 import java.text.DecimalFormat;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class ClienteView {
 
@@ -22,7 +19,7 @@ public class ClienteView {
 
         try {
             Scanner ler = new Scanner(System.in);
-            System.out.println("------------ Cadastro --------------");
+            System.out.println("------------ CADASTRO DE CLIENTE --------------");
             System.out.print("Qual o seu nome:");
             String nome = ler.nextLine();
             System.out.print("Qual o seu email:");
@@ -90,21 +87,32 @@ public class ClienteView {
             }
 
             System.out.println("\n");
-            if(paginaAtual != 1){
-                System.out.print("[1] voltar      ");
-            }
-            if(paginaAtual != quantPaginas){
-                System.out.print("[2] avançar");
-            }
-            System.out.println("\n[3] gerar cupom fiscal      [4] sair");
-            System.out.print("O que você quer fazer:");
-            int op = ler.nextInt();
-            ler.nextLine();
 
-            if(op == 1){
+            int op = 0;
+            boolean entradaValida = false;
+
+            while (!entradaValida) {
+                if (paginaAtual > 1) {
+                    System.out.print("[1] voltar      ");
+                }
+                if (paginaAtual < quantPaginas) {
+                    System.out.print("[2] avançar");
+                }
+                System.out.println("\n[3] gerar cupom fiscal      [4] sair");
+                System.out.print("O que você quer fazer: ");
+
+                try {
+                    op = Integer.parseInt(ler.nextLine());
+                    entradaValida = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Erro: digite um número válido.");
+                }
+            }
+
+            if(op == 1 && paginaAtual > 1){
                 paginaAtual--;
             }
-            else if(op == 2){
+            else if(op == 2 && paginaAtual < quantPaginas){
                 paginaAtual++;
             }
             else if(op == 3){
@@ -113,8 +121,10 @@ public class ClienteView {
                 ler.nextLine();
                 gerarNotaFiscal(idCupom);
             }
-            else {
+            else if (op == 4) {
                 break;
+            } else {
+                System.out.println("Opção inválida ou indisponível.");
             }
 
         }
