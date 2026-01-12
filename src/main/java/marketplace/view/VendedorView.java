@@ -1,10 +1,9 @@
 package marketplace.view;
 
+import marketplace.dao.ClientesDAO;
 import marketplace.dao.VendedorDAO;
-import marketplace.exceptions.EntradaInvalidaException;
-import marketplace.exceptions.OperacaoVendaException;
-import marketplace.exceptions.ProdutoInvalidoException;
-import marketplace.exceptions.VendedorNuloExcception;
+import marketplace.exceptions.*;
+import marketplace.model.Cliente;
 import marketplace.model.Produto;
 import marketplace.model.Vendedor;
 import marketplace.service.VendedorService;
@@ -18,7 +17,31 @@ public class VendedorView {
 
     private final DecimalFormat df = new DecimalFormat("000");
 
+    public Vendedor login(){
+        try{
+            VendedorDAO dao = new VendedorDAO();
+            Scanner ler = new Scanner(System.in);
+
+            System.out.println("------------ LOGIN --------------");
+            System.out.print("Qual o seu cnpj:");
+            String email = ler.nextLine();
+            System.out.print("Qual sua senha:");
+            String senha = ler.nextLine();
+
+            Vendedor vendedor = dao.Pesquisar(email, senha);
+
+            if(vendedor == null){
+                throw new VendedorNuloExcception("vendedor não encontrado");
+            }
+            return vendedor;
+
+        } catch (Exception e){
+            throw new EntradaInvalidaException("entrada de valores inválidos");
+        }
+    }
+
     public Vendedor criarVendedor(){
+
 
 
         try {

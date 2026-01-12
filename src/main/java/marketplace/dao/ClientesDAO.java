@@ -12,6 +12,13 @@ public class ClientesDAO extends DAO<Cliente> {
         super(Cliente.class);
     }
 
+    public Cliente Pesquisar(String email, String senha){
+        String jpql  = "select c from Cliente c where c.email = :email and c.senha = :senha";
+
+        return em.createQuery(jpql, Cliente.class).setParameter("email", email).setParameter("senha", senha)
+                .getSingleResult();
+    }
+
 
     public List<Compra> getUltimasCompras(Cliente cliente,int inicio, int quantidade){
         String jpql = "select c from Compra c where c.cliente = :cliente order by c.horario desc";
