@@ -17,20 +17,25 @@ public class Main {
     public static void main(String[] args) {
 
 
-        ClienteService compra = new ClienteService();
-        VendedorService venda = new VendedorService();
+        ClienteService clienteService = new ClienteService();
+        VendedorService vendaService = new VendedorService();
         ClienteView clienteView = new ClienteView();
         VendedorView vendedorView = new VendedorView();
         ProdutoView produtoView = new ProdutoView();
 
         Scanner ler = new Scanner(System.in);
         boolean sistemaRodando = true;
+        Object logado = null;
+
+        boolean naoValido;
+
+        int opcao;
+
 
         while (sistemaRodando) {
 
             // ---> Area de registro
-            int register = 0;
-            register = validaInput(ler, new String[] {
+            opcao = validaInput(ler, new String[]{
                     "[1] Login",
                     "[2] Registrar Loja (Vendedor)",
                     "[3] Registrar Cliente",
@@ -38,17 +43,15 @@ public class Main {
             });
 
 
-            boolean registrando;
-            Object logado = null;
-            switch (register) {
+            switch (opcao) {
                 case 1:
-                    registrando = true;
-                    while (registrando) {
+                    naoValido = true;
+                    while (naoValido) {
                         try {
-                            int tipoUser = validaInput(ler, new String[] {"[1] Sou Cliente", "[2] Sou Vendedor", "[3] Voltar"});
+                            int tipoUser = validaInput(ler, new String[]{"[1] Sou Cliente", "[2] Sou Vendedor", "[3] Voltar"});
 
                             if (tipoUser == 3) {
-                                registrando = false;
+                                naoValido = false;
                                 break;
                             }
                             if (tipoUser == 1) {
@@ -56,59 +59,144 @@ public class Main {
                                 System.out.println("Login bem sucedido, Bem vindo " + cliente.getNome());
 
                                 logado = cliente;
-                                registrando = false;
+                                naoValido = false;
                             } else {
                                 Vendedor vendedor = vendedorView.login();
                                 System.out.println("Login bem sucedido, Bem vindo " + vendedor.getNomeLoja());
 
                                 logado = vendedor;
-                                registrando = false;
+                                naoValido = false;
                             }
                         } catch (EntradaInvalidaException | ClienteInvalidoException | VendedorNuloExcception e) {
                             System.out.println("Erro:" + e.getMessage());
-                            int opErro = validaInput(ler, new String[] {"[1] Tentar novamente", "[2] Voltar ao Menu Principal"});
-                            if (opErro == 2) {
-                                registrando = false;
-                            }
+                            naoValido = tentarNovamente(ler);
 
                         }
                     }
                     break;
                 case 2:
-                    registrando = true;
+                    naoValido = true;
 
-                    while (registrando){
+                    while (naoValido) {
                         try {
 
-                            logado = vendedorView.criarVendedor();
-                            registrando = false;
-                        } catch (EntradaInvalidaException e){
-                            System.out.println("Erro:"+e.getMessage());
-                            int opErro = validaInput(ler, new String[] {"[1] Tentar novamente", "[2] Voltar ao Menu Principal"});
-                            if (opErro == 2) {
-                                registrando = false;
-                            }
+                            logado = vendaService.criarVendedor();
+                            naoValido = false;
+                        } catch (OperacaoVendaException e) {
+                            System.out.println("Erro:" + e.getMessage());
+                            naoValido = tentarNovamente(ler);
                         }
                     }
+                    break;
                 case 3:
-                    registrando = true;
+                    naoValido = true;
 
-                    while (registrando){
+                    while (naoValido) {
                         try {
 
-                            logado = clienteView.criarCliente();
-                            registrando = false;
-                        } catch (EntradaInvalidaException e){
-                            System.out.println("Erro:"+e.getMessage());
-                            int opErro = validaInput(ler, new String[] {"[1] Tentar novamente", "[2] Voltar ao Menu Principal"});
-                            if (opErro == 2) {
-                                registrando = false;
-                            }
+                            logado = clienteService.criarCliente();
+                            naoValido = false;
+                        } catch (OperacaoCompraException e) {
+                            System.out.println("Erro:" + e.getMessage());
+                            naoValido = tentarNovamente(ler);
                         }
                     }
+                    break;
 
             }
 
+            // ----> Area principal
+            while (logado != null){
+                // ----> Area do Cliente
+                if(logado instanceof Cliente cliente){
+                    System.out.println("---------------- Area principal ---------------");
+                    opcao = validaInput(ler, new String[] {"[1] Minha conta", "[2] Carrinho ", "[3] Lista de produtos", "[4] Procurar produtos", "[5] Deslogar" });
+
+                    switch (opcao){
+                        case 1:
+
+                            naoValido = true;
+                            clienteView.mostrarConta(cliente);
+                            opcao = validaInput(ler, new String[]{"[1] Alterar registro", "[2] Mostrar histórico", "[3] voltar"});
+                            if (opcao == 1) {
+                                while (naoValido) {
+                                    try {
+                                        clienteService.atualizarCliente(cliente.getId());
+                                    } catch (ClienteInvalidoException | OperacaoCompraException e) {
+                                        System.out.println(e.getMessage());
+                                        naoValido = tentarNovamente(ler);
+                                    }
+                                }
+                            }
+                            else if(opcao == 2){
+                                while (naoValido) {
+                                    try {
+                                        clienteView.mostrarHistorico(cliente);
+                                    } catch (CarrinhoNuloException e) {
+                                        System.out.println(e.getMessage());
+                                        naoValido = tentarNovamente(ler);
+                                    }
+                                }
+                            }
+                            else {
+                                break;
+                            }
+                            break;
+
+                        case 2:
+                            naoValido = true;
+                            while (naoValido) {
+                                try {
+                                    clienteView.mostrarCarrinho(cliente);
+                                } catch (CarrinhoNuloException | ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
+                                    System.out.println(e.getMessage());
+                                    naoValido = tentarNovamente(ler);
+                                }
+                            }
+
+
+                        case 3:
+                            naoValido = true;
+                            produtoView.exibirCatalogo();
+                            opcao = validaInput(ler, new String[]{"[1] Adicionar produto", "[2] voltar"});
+                            if (opcao == 1) {
+                                while (naoValido) {
+                                    try {
+                                        System.out.print("Qual o codigo do produto:");
+                                        Long codProd = Long.parseLong(ler.nextLine().trim());
+                                        System.out.print("Qual o quantidade:");
+                                        int quant = Integer.parseInt(ler.nextLine().trim());
+
+                                        clienteService.adicionarProduto(cliente.getId(), codProd, quant);
+                                    } catch (InputMismatchException | ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
+                                        System.out.println(e.getMessage());
+                                        naoValido = tentarNovamente(ler);
+                                    }
+                                }
+                            }
+                            else {
+                                break;
+                            }
+                            break;
+                        case 4:
+                            System.out.println("Qual produtos deseja proucurar:");
+                            produtoView.pesquisaCatalogo(ler.nextLine());
+                            break;
+
+                        case 5:
+                            logado = null;
+                            break;
+
+                    }
+
+                }
+
+                // ----->  Area do Vendedor
+                if(logado instanceof Vendedor){
+
+                }
+
+            }
 
         }
     }
@@ -134,6 +222,12 @@ public class Main {
             }
         }
         return variavel;
+    }
+
+    private static boolean tentarNovamente(Scanner ler){
+        int opcao;
+        opcao = validaInput(ler, new String[]{"[1] Tentar novamente", "[2] Voltar"});
+        return opcao != 2;
     }
 }
 

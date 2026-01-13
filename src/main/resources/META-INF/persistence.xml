@@ -15,7 +15,7 @@
             <property name="jakarta.persistence.jdbc.password" value="admin"/>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
 
-            <property name="jakarta.persistence.schema-generation.database.action" value="create-drop"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
 
             <property name="hibernate.dialect"
                       value="org.hibernate.dialect.MySQLDialect"/>
