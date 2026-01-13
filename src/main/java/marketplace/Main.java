@@ -121,7 +121,8 @@ public class Main {
                             if (opcao == 1) {
                                 while (naoValido) {
                                     try {
-                                        clienteService.atualizarCliente(cliente.getId());
+                                        logado = clienteService.atualizarCliente(cliente.getId());
+                                        naoValido = false;
                                     } catch (ClienteInvalidoException | OperacaoCompraException e) {
                                         System.out.println(e.getMessage());
                                         naoValido = tentarNovamente(ler);
@@ -134,7 +135,7 @@ public class Main {
                                         clienteView.mostrarHistorico(cliente);
                                     } catch (CarrinhoNuloException e) {
                                         System.out.println(e.getMessage());
-                                        naoValido = tentarNovamente(ler);
+                                        naoValido = false;
                                     }
                                 }
                             }
@@ -148,39 +149,52 @@ public class Main {
                             while (naoValido) {
                                 try {
                                     clienteView.mostrarCarrinho(cliente);
-                                } catch (CarrinhoNuloException | ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
+                                } catch (CarrinhoNuloException e) {
+                                    System.out.println(e.getMessage());
+                                    naoValido = false;
+                                }catch (ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
                                     System.out.println(e.getMessage());
                                     naoValido = tentarNovamente(ler);
                                 }
                             }
+                            break;
 
 
                         case 3:
                             naoValido = true;
-                            produtoView.exibirCatalogo();
-                            opcao = validaInput(ler, new String[]{"[1] Adicionar produto", "[2] voltar"});
-                            if (opcao == 1) {
-                                while (naoValido) {
-                                    try {
-                                        System.out.print("Qual o codigo do produto:");
-                                        Long codProd = Long.parseLong(ler.nextLine().trim());
-                                        System.out.print("Qual o quantidade:");
-                                        int quant = Integer.parseInt(ler.nextLine().trim());
+                            try {
+                                produtoView.exibirCatalogo();
+                                opcao = validaInput(ler, new String[]{"[1] Adicionar produto", "[2] voltar"});
+                                if (opcao == 1) {
+                                    while (naoValido) {
+                                        try {
+                                            System.out.print("Qual o codigo do produto:");
+                                            Long codProd = Long.parseLong(ler.nextLine().trim());
+                                            System.out.print("Qual o quantidade:");
+                                            int quant = Integer.parseInt(ler.nextLine().trim());
 
-                                        clienteService.adicionarProduto(cliente.getId(), codProd, quant);
-                                    } catch (InputMismatchException | ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
-                                        System.out.println(e.getMessage());
-                                        naoValido = tentarNovamente(ler);
+                                            clienteService.adicionarProduto(cliente.getId(), codProd, quant);
+                                        } catch (InputMismatchException | ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
+                                            System.out.println(e.getMessage());
+                                            naoValido = tentarNovamente(ler);
+                                        }
                                     }
                                 }
+                                else {
+                                    break;
+                                }
+                            } catch (ProdutoInvalidoException e) {
+                                System.out.println(e.getMessage());
                             }
-                            else {
-                                break;
-                            }
+
                             break;
                         case 4:
-                            System.out.println("Qual produtos deseja proucurar:");
-                            produtoView.pesquisaCatalogo(ler.nextLine());
+                            System.out.print("Qual produtos deseja proucurar:");
+                            try {
+                                produtoView.pesquisaCatalogo(ler.nextLine());
+                            } catch (ProdutoInvalidoException e) {
+                                System.out.println(e.getMessage());
+                            }
                             break;
 
                         case 5:

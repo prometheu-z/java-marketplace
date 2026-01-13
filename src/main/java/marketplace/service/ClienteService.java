@@ -77,7 +77,7 @@ public class ClienteService {
 
     }
 
-    public void atualizarCliente(Long idCliente){
+    public Cliente atualizarCliente(Long idCliente){
         abreTransacao();
         ClienteView view = new ClienteView();
 
@@ -94,7 +94,10 @@ public class ClienteService {
 
             daoC.merge(cliente);
 
+            fechaTransacao();
+
             System.out.println("Cliente "+cliente.getNome()+" atualizado");
+            return cliente;
 
         }catch (EntradaInvalidaException e){
             System.out.println("Operação cancelada:"+e.getMessage());
@@ -108,6 +111,7 @@ public class ClienteService {
 
             throw new OperacaoCompraException("Não foi possível adicionar o produto ao carrinho", e);
         }
+        return null;
     }
 
 

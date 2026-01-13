@@ -178,6 +178,9 @@ public class ClienteView {
         int paginaAtual = 1;
         while (true){
             List<Compra> compras = dao.getUltimasCompras(cliente,(paginaAtual-1)*4,4);
+            if(compras == null){
+                throw new CarrinhoNuloException("nenhuma Produto no carrinho");
+            }
             if(paginaAtual == 1){
                 System.out.println("\n-------------- Compras -------------------");
             }

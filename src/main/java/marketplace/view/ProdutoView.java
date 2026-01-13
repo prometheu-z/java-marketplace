@@ -2,6 +2,7 @@ package marketplace.view;
 
 import marketplace.dao.ClientesDAO;
 import marketplace.dao.ProdutoDAO;
+import marketplace.exceptions.ProdutoInvalidoException;
 import marketplace.model.Compra;
 import marketplace.model.Produto;
 
@@ -22,7 +23,10 @@ public class ProdutoView {
         int paginaAtual = 1;
 
         while (true) {
-            List<Produto> produtos = dao.pesquisarProdutos((paginaAtual - 1) * 4, 4, pesquisa );
+            List<Produto> produtos = dao.pesquisarProdutos((paginaAtual - 1) * 4, 4, pesquisa);
+            if(produtos.isEmpty()){
+                throw new ProdutoInvalidoException("Nenhum produto encontrado");
+            }
             long totalProdutos = dao.numProdutos();
 
             int quantPaginas = Math.max(1, (int) Math.ceil((double) totalProdutos / 4));
@@ -118,6 +122,9 @@ public class ProdutoView {
                     produtos = dao.listarProdutosVendas((paginaAtual - 1) * 4, 4, vendaMin);
                     totalProdutos = dao.numProdutosVendas(vendaMin);
                     break;
+            }
+            if(produtos.isEmpty()){
+                throw new ProdutoInvalidoException("Nenhum produto encontrado");
             }
             int quantPaginas = Math.max(1, (int) Math.ceil((double) totalProdutos / 4));
 
