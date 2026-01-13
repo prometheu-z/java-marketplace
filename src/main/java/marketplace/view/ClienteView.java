@@ -2,19 +2,46 @@ package marketplace.view;
 
 import marketplace.dao.ClientesDAO;
 import marketplace.dao.CompraDAO;
+import marketplace.exceptions.CarrinhoNuloException;
+import marketplace.exceptions.ClienteInvalidoException;
 import marketplace.exceptions.EntradaInvalidaException;
+import marketplace.exceptions.OperacaoCompraException;
 import marketplace.model.Cliente;
 import marketplace.model.Compra;
 import marketplace.model.ItemCompra;
 import marketplace.model.Produto;
+import marketplace.service.ClienteService;
 
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class ClienteView {
 
     private final DecimalFormat df = new DecimalFormat("000");
 
+    public Cliente login(){
+        try{
+            ClientesDAO dao = new ClientesDAO();
+            Scanner ler = new Scanner(System.in);
+
+            System.out.println("------------ LOGIN --------------");
+            System.out.print("Qual o seu email:");
+            String email = ler.nextLine();
+            System.out.print("Qual sua senha:");
+            String senha = ler.nextLine();
+
+            Cliente cliente = dao.Pesquisar(email, senha);
+
+            if(cliente == null){
+                throw new ClienteInvalidoException("cliente não encontrado");
+            }
+            return cliente;
+
+        } catch (Exception e){
+            throw new EntradaInvalidaException("entrada de valores inválidos");
+        }
+    }
     public Cliente criarCliente(){
 
         try {
@@ -61,6 +88,89 @@ public class ClienteView {
 
     }
 
+
+
+    public void mostrarConta(Cliente cliente){
+        try{
+            ClientesDAO dao = new ClientesDAO();
+
+            System.out.println("Nome: "+cliente.getNome()+"        Cod: "+cliente.getId());
+            System.out.println("Email: "+cliente.getEmail());
+            System.out.println("Senha: "+cliente.getSenha());
+
+            List<Compra> compras = dao.getUltimasCompras(cliente, 0, 2);
+
+            System.out.println("Historico de compras:");
+            for (Compra compra : compras){
+                System.out.println("-----------------------------");
+                System.out.println("Compra ativa:"+compra.getCompraAtiva()+"         Id:"+compra.getId_compra());
+                System.out.println("Valor: "+compra.getValorTotal()+"      Itens:"+compra.getItens().size());
+            }
+            System.out.println("-----------------------------");
+
+
+
+        }catch (Exception e){
+            System.out.println("Erro inesperado:"+e.getMessage());
+        }
+    }
+
+    public void mostrarCarrinho(Cliente cliente){
+        ClientesDAO dao = new ClientesDAO();
+        Scanner ler = new Scanner(System.in);
+        ClienteService service = new ClienteService();
+
+        Compra compraAtiva = dao.compraAtiva(cliente);
+        if(compraAtiva == null){
+            throw new CarrinhoNuloException("Nenhuma compra ativa");
+        }
+        while (true){
+
+            mostrarItens(compraAtiva.getItens());
+
+            System.out.println("\n");
+
+            int op = 0;
+            boolean entradaValida = false;
+
+            while (!entradaValida) {
+                System.out.println("\n[1] gerar cupom fiscal\n[2] Finalizar compra\n[3] Remover Produto\n[4] Sair");
+                System.out.print("O que você quer fazer: ");
+
+                try {
+                    op = Integer.parseInt(ler.nextLine());
+                    entradaValida = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Erro: digite um número válido.");
+                }
+            }
+
+            if(op == 1 ){
+                System.out.println("Qual o codigo da compra:");
+                Long idCupom = ler.nextLong();
+                ler.nextLine();
+                gerarNotaFiscal(idCupom);
+            }
+            else if (op == 2) {
+                try {
+                    service.finalizarCompra(cliente);
+                } catch (CarrinhoNuloException |  OperacaoCompraException e) {
+                    System.out.println(e.getMessage());
+                }
+            }  else if(op == 3){
+                System.out.println("Qual o codigo do produto:");
+                Long idProd = ler.nextLong();
+                ler.nextLine();
+                service.removerProduto(cliente.getId(), idProd);
+            } else if(op == 4){
+                break;
+            }
+            else {
+                System.out.println("Opção inválida ou indisponível.");
+            }
+
+        }
+    }
     public void mostrarHistorico(Cliente cliente){
         ClientesDAO dao = new ClientesDAO();
         Scanner ler = new Scanner(System.in);
@@ -98,13 +208,13 @@ public class ClienteView {
                 if (paginaAtual < quantPaginas) {
                     System.out.print("[2] avançar");
                 }
-                System.out.println("\n[3] gerar cupom fiscal      [4] sair");
+                System.out.println("\n[3] gerar cupom fiscal ");
                 System.out.print("O que você quer fazer: ");
 
                 try {
                     op = Integer.parseInt(ler.nextLine());
                     entradaValida = true;
-                } catch (InputMismatchException e) {
+                } catch (NumberFormatException e) {
                     System.out.println("Erro: digite um número válido.");
                 }
             }
@@ -116,13 +226,15 @@ public class ClienteView {
                 paginaAtual++;
             }
             else if(op == 3){
-                System.out.println("Qual o codigo da compra:");
-                Long idCupom = ler.nextLong();
-                ler.nextLine();
-                gerarNotaFiscal(idCupom);
-            }
-            else if (op == 4) {
-                break;
+                try {
+                    System.out.println("Qual o codigo da compra:");
+                    Long idCupom = Long.parseLong(ler.nextLine());
+
+                    gerarNotaFiscal(idCupom);
+                } catch (NumberFormatException e) {
+                    System.out.println("Erro: digite um número válido.");
+                }
+
             } else {
                 System.out.println("Opção inválida ou indisponível.");
             }
@@ -165,8 +277,12 @@ public class ClienteView {
     }
     public void gerarNotaFiscal(Long idCompra){
         CompraDAO dao = new CompraDAO();
-        //TO DO: try catch CompraNullException
+
         Compra compra = dao.buscarPorId(idCompra);
+
+        if(compra == null){
+            throw new CarrinhoNuloException("Compra não encontrada");
+        }
 
         System.out.println("----------------------------");
         System.out.println("JAVA MARKETPLACE\nRua tal s/n\n");

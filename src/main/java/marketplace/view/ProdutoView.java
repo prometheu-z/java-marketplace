@@ -15,6 +15,78 @@ public class ProdutoView {
     private final DecimalFormat df = new DecimalFormat("000");
 
 
+    public void pesquisaCatalogo(String pesquisa) {
+        ProdutoDAO dao = new ProdutoDAO();
+        Scanner ler = new Scanner(System.in);
+
+        int paginaAtual = 1;
+
+        while (true) {
+            List<Produto> produtos = dao.pesquisarProdutos((paginaAtual - 1) * 4, 4, pesquisa );
+            long totalProdutos = dao.numProdutos();
+
+            int quantPaginas = Math.max(1, (int) Math.ceil((double) totalProdutos / 4));
+
+            if (paginaAtual > quantPaginas) {
+                paginaAtual = 1;
+                continue;
+            }
+
+            if (paginaAtual == 1) {
+                System.out.println("\n-------------- Produtos relacionados a: "+pesquisa+" -------------------");
+            }
+            System.out.println("\n\n          Pagina: " + paginaAtual + "/" + quantPaginas);
+
+
+            for (Produto produto : produtos) {
+                System.out.println("=".repeat(40));
+                System.out.print("Nome: "+produto.getNome());
+                System.out.println("        Valor: " + produto.getValorUnitario());
+                System.out.print("Código: " + df.format(produto.getId_prod()));
+                System.out.println("        Vendidos: " + produto.getVendas());
+                System.out.println("=".repeat(40));
+            }
+
+            System.out.println("\n");
+
+            int op = 0;
+            boolean entradaValida = false;
+
+            while (!entradaValida) {
+                if (paginaAtual > 1) {
+                    System.out.print("[1] voltar      ");
+                }
+                if (paginaAtual < quantPaginas) {
+                    System.out.print("[2] avançar");
+                }
+                System.out.println("\n[3] Mudar pesquisa      [4] sair");
+                System.out.print("O que você quer fazer: ");
+
+                try {
+                    op = Integer.parseInt(ler.nextLine());
+                    entradaValida = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Erro: digite um número válido.");
+                }
+            }
+
+
+            if (op == 1 && paginaAtual > 1) {
+                paginaAtual--;
+            }
+            else if (op == 2 && paginaAtual < quantPaginas) {
+                paginaAtual++;
+            } else if (op == 3) {
+                System.out.print("Qual o pesquisa: ");
+                pesquisa= ler.nextLine();
+
+            } else if (op == 4) {
+                break;
+            } else {
+                System.out.println("Opção inválida ou indisponível.");
+            }
+        }
+    }
 
     public void exibirCatalogo() {
         ProdutoDAO dao = new ProdutoDAO();
