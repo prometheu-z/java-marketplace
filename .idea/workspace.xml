@@ -7,11 +7,11 @@
     <list default="true" id="a55a69f7-7bdd-40e2-af89-482a9384b9c9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/ProdutoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/ProdutoDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/OperacaoCompraException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/exceptions/OperacaoCompraException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/dao/CompraDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/dao/CompraDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/service/VendedorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/service/VendedorService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/view/ClienteView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/view/ClienteView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/view/ProdutoView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/view/ProdutoView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/view/VendedorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/view/VendedorView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,42 +62,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Application.MainTest.executor": "Run",
-    "Application.test.executor": "Run",
-    "JUnit.ClienteTest.adicionarCliente.executor": "Run",
-    "JUnit.ClienteTest.executor": "Run",
-    "JUnit.ClienteTest.fazerCompra.executor": "Run",
-    "JUnit.ClienteTest.removerUsuario.executor": "Run",
-    "JUnit.CompraTest.itemPeloProduto.executor": "Run",
-    "JUnit.ProdutoTest.executor": "Run",
-    "JUnit.ProdutoTest.updateProduto.executor": "Run",
-    "Maven.Main.executor": "Run",
-    "Maven.MainTest.executor": "Run",
-    "Maven.java-marketplace [clean,install...].executor": "Run",
-    "Maven.java-marketplace [clean].executor": "Run",
-    "Maven.java-marketplace [compile].executor": "Run",
-    "Maven.java-marketplace [install...].executor": "Run",
-    "Maven.java-marketplace [install].executor": "Run",
-    "Maven.java-marketplace [test].executor": "Run",
-    "Maven.java-marketplace [verify].executor": "Run",
-    "Maven.test.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "dev",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/gabri/OneDrive/Documentos/java-marketplace",
-    "onboarding.tips.debug.path": "C:/Users/gabri/OneDrive/Documentos/java-marketplace/src/main/java/org/examples/Main.java",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.MainTest.executor&quot;: &quot;Run&quot;,
+    &quot;Application.test.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ClienteTest.adicionarCliente.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ClienteTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ClienteTest.fazerCompra.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ClienteTest.removerUsuario.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CompraTest.itemPeloProduto.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ProdutoTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ProdutoTest.updateProduto.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.MainTest.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.java-marketplace [clean,install...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.java-marketplace [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.java-marketplace [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.java-marketplace [install...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.java-marketplace [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.java-marketplace [test].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.java-marketplace [verify].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.test.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gabri/OneDrive/Documentos/java-marketplace&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/gabri/OneDrive/Documentos/java-marketplace/src/main/java/org/examples/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\gabri\OneDrive\Documentos\java-marketplace\src\main\resources" />

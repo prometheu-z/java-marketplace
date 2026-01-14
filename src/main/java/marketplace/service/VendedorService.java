@@ -9,6 +9,9 @@ import marketplace.exceptions.VendedorNuloExcception;
 import marketplace.model.Produto;
 import marketplace.model.Vendedor;
 import marketplace.view.VendedorView;
+import org.hibernate.StaleStateException;
+
+import java.util.Scanner;
 
 public class VendedorService {
     private EntityManager em;
@@ -60,12 +63,12 @@ public class VendedorService {
 
     }
 
-    public Vendedor criarVendedor(){
+    public Vendedor criarVendedor(Scanner ler){
         abreTransacao();
 
         VendedorView view = new VendedorView();
         try {
-            Vendedor vendedor = view.criarVendedor();
+            Vendedor vendedor = view.criarVendedor(ler);
 
             daoV.persistir(vendedor);
 
@@ -89,7 +92,7 @@ public class VendedorService {
         }
         return null;
     }
-    public void alterarVendedor(Long idVendedor){
+    public Vendedor alterarVendedor(Long idVendedor, Scanner ler){
         abreTransacao();
 
         VendedorView view = new VendedorView();
@@ -99,7 +102,7 @@ public class VendedorService {
                 throw new VendedorNuloExcception("Vendedor de id: "+idVendedor+", não encontrado");
             }
 
-            Vendedor novoVendedor = view.alterarVendedor(vendedor);
+            Vendedor novoVendedor = view.alterarVendedor(vendedor, ler);
 
             vendedor.setSenha(novoVendedor.getSenha());
             vendedor.setNomeLoja(novoVendedor.getNomeLoja());
@@ -108,7 +111,11 @@ public class VendedorService {
 
             fechaTransacao();
 
-            System.out.println("Loja "+vendedor.getNomeLoja()+" atualizada");
+            System.out.println("Loja "+vendedor.getNomeLoja()+
+
+                    " atualizada");
+
+            return vendedor;
 
 
         }catch (EntradaInvalidaException e){
@@ -123,9 +130,10 @@ public class VendedorService {
 
             throw new OperacaoVendaException("Não foi possível alterar a loja", e);
         }
+        return null;
     }
 
-    public void criarProduto(Long idVendedor){
+    public void criarProduto(Long idVendedor, Scanner ler){
 
         abreTransacao();
 
@@ -137,7 +145,7 @@ public class VendedorService {
                 throw new VendedorNuloExcception("Vendedor de id: "+idVendedor+", não encontrado");
             }
 
-            Produto produto = view.criarProduto();
+            Produto produto = view.criarProduto(ler);
             vendedor.adicionarEstoque(produto);
             daoP.persistir(produto);
 
@@ -192,7 +200,7 @@ public class VendedorService {
 
     }
 
-    public void atualizarProduto(Long idVendedor, Long idProduto){
+    public void atualizarProduto(Long idVendedor, Long idProduto, Scanner ler){
         abreTransacao();
         VendedorView view = new VendedorView();
         try {
@@ -210,7 +218,7 @@ public class VendedorService {
                 throw new ProdutoInvalidoException("Este produto de id: "+idProduto+", não pertence à esta loja");
             }
 
-            Produto produtoAlterado = view.alterarProduto(produto);
+            Produto produtoAlterado = view.alterarProduto(produto, ler);
 
 
             produto.setNome(produtoAlterado.getNome());

@@ -6,6 +6,8 @@ import marketplace.exceptions.*;
 import marketplace.model.*;
 import marketplace.view.ClienteView;
 
+import java.util.Scanner;
+
 public class ClienteService {
     private EntityManager em;
 
@@ -50,11 +52,11 @@ public class ClienteService {
     }
 
 
-    public Cliente criarCliente(){
+    public Cliente criarCliente(Scanner ler){
         abreTransacao();
         ClienteView view = new ClienteView();
         try {
-             Cliente cliente = view.criarCliente();
+             Cliente cliente = view.criarCliente(ler);
              daoC.persistir(cliente);
 
              fechaTransacao();
@@ -77,7 +79,7 @@ public class ClienteService {
 
     }
 
-    public void atualizarCliente(Long idCliente){
+    public Cliente atualizarCliente(Long idCliente, Scanner ler){
         abreTransacao();
         ClienteView view = new ClienteView();
 
@@ -86,7 +88,7 @@ public class ClienteService {
             if(cliente == null){
                 throw new ClienteInvalidoException("Cliente de código: "+ idCliente+" não encontrado");
             }
-            Cliente novoCliente = view.alterarCliente(cliente);
+            Cliente novoCliente = view.alterarCliente(cliente, ler);
 
             cliente.setNome(novoCliente.getNome());
             cliente.setEmail(novoCliente.getEmail());
@@ -94,7 +96,10 @@ public class ClienteService {
 
             daoC.merge(cliente);
 
+            fechaTransacao();
+
             System.out.println("Cliente "+cliente.getNome()+" atualizado");
+            return cliente;
 
         }catch (EntradaInvalidaException e){
             System.out.println("Operação cancelada:"+e.getMessage());
@@ -108,6 +113,7 @@ public class ClienteService {
 
             throw new OperacaoCompraException("Não foi possível adicionar o produto ao carrinho", e);
         }
+        return null;
     }
 
 

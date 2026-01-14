@@ -17,6 +17,7 @@ public class ProdutoDAO extends DAO<Produto> {
 
 
 
+
     public Long numProdutos(){
         String jpql = "select Count(p) from Produto p where p.ativo = true and p.quantidade > 0";
         return em.createQuery(jpql, Long.class).getSingleResult();
@@ -74,9 +75,11 @@ public class ProdutoDAO extends DAO<Produto> {
     //  por pesquisa
 
     public List<Produto> pesquisarProdutos(int inicio, int quantidade, String perquisa){
-        String jpql = "select p from Produto p where p,nome like :nome order by p.vendas";
+        String jpql = "select p from Produto p where p.ativo = true and p.quantidade > 0 and lower(p.nome) like lower(:nome) order by p.vendas desc";
 
-        return em.createQuery(jpql, Produto.class).setParameter("nome", perquisa+"%").getResultList();
+        return em.createQuery(jpql, Produto.class).setParameter("nome", "%" +perquisa+"%").setFirstResult(inicio)
+                .setMaxResults(quantidade)
+                .getResultList();
     }
 
     public Produto buscaProId(Long id){
