@@ -15,7 +15,7 @@ public class VendedorDAO extends DAO<Vendedor> {
     public Vendedor Pesquisar(String cnpj, String senha){
         String jpql  = "select v from Vendedor v where v.cnpj = :cnpj and v.senha = :senha";
 
-        return em.createQuery(jpql, Vendedor.class).setParameter("email", cnpj).setParameter("senha", senha)
+        return em.createQuery(jpql, Vendedor.class).setParameter("cnpj", cnpj).setParameter("senha", senha)
                 .getSingleResult();
     }
 

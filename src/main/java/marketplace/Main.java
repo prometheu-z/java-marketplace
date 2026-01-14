@@ -55,19 +55,19 @@ public class Main {
                                 break;
                             }
                             if (tipoUser == 1) {
-                                Cliente cliente = clienteView.login();
+                                Cliente cliente = clienteView.login(ler);
                                 System.out.println("Login bem sucedido, Bem vindo " + cliente.getNome());
 
                                 logado = cliente;
                                 naoValido = false;
                             } else {
-                                Vendedor vendedor = vendedorView.login();
+                                Vendedor vendedor = vendedorView.login(ler);
                                 System.out.println("Login bem sucedido, Bem vindo " + vendedor.getNomeLoja());
 
                                 logado = vendedor;
                                 naoValido = false;
                             }
-                        } catch (EntradaInvalidaException | ClienteInvalidoException | VendedorNuloExcception e) {
+                        } catch (OperacaoVendaException | EntradaInvalidaException | ClienteInvalidoException | VendedorNuloExcception e) {
                             System.out.println("Erro:" + e.getMessage());
                             naoValido = tentarNovamente(ler);
 
@@ -80,10 +80,10 @@ public class Main {
                     while (naoValido) {
                         try {
 
-                            logado = vendaService.criarVendedor();
+                            logado = vendaService.criarVendedor(ler);
                             naoValido = false;
                         } catch (OperacaoVendaException e) {
-                            System.out.println("Erro:" + e.getMessage());
+                            System.out.println(e.getMessage());
                             naoValido = tentarNovamente(ler);
                         }
                     }
@@ -94,7 +94,7 @@ public class Main {
                     while (naoValido) {
                         try {
 
-                            logado = clienteService.criarCliente();
+                            logado = clienteService.criarCliente(ler);
                             naoValido = false;
                         } catch (OperacaoCompraException e) {
                             System.out.println("Erro:" + e.getMessage());
@@ -121,7 +121,7 @@ public class Main {
                             if (opcao == 1) {
                                 while (naoValido) {
                                     try {
-                                        logado = clienteService.atualizarCliente(cliente.getId());
+                                        logado = clienteService.atualizarCliente(cliente.getId(), ler);
                                         naoValido = false;
                                     } catch (ClienteInvalidoException | OperacaoCompraException e) {
                                         System.out.println(e.getMessage());
@@ -130,13 +130,12 @@ public class Main {
                                 }
                             }
                             else if(opcao == 2){
-                                while (naoValido) {
-                                    try {
-                                        clienteView.mostrarHistorico(cliente);
-                                    } catch (CarrinhoNuloException e) {
-                                        System.out.println(e.getMessage());
-                                        naoValido = false;
-                                    }
+                                try {
+                                    clienteView.mostrarHistorico(cliente, ler);
+                                    naoValido = false;
+                                } catch (CarrinhoNuloException e) {
+                                    System.out.println(e.getMessage());
+                                    naoValido = false;
                                 }
                             }
                             else {
@@ -148,11 +147,12 @@ public class Main {
                             naoValido = true;
                             while (naoValido) {
                                 try {
-                                    clienteView.mostrarCarrinho(cliente);
+                                    clienteView.mostrarCarrinho(cliente, ler);
+                                    naoValido = false;
                                 } catch (CarrinhoNuloException e) {
                                     System.out.println(e.getMessage());
                                     naoValido = false;
-                                }catch (ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
+                                }catch (NumberFormatException | ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
                                     System.out.println(e.getMessage());
                                     naoValido = tentarNovamente(ler);
                                 }
@@ -163,7 +163,7 @@ public class Main {
                         case 3:
                             naoValido = true;
                             try {
-                                produtoView.exibirCatalogo();
+                                produtoView.exibirCatalogo(ler);
                                 opcao = validaInput(ler, new String[]{"[1] Adicionar produto", "[2] voltar"});
                                 if (opcao == 1) {
                                     while (naoValido) {
@@ -174,7 +174,8 @@ public class Main {
                                             int quant = Integer.parseInt(ler.nextLine().trim());
 
                                             clienteService.adicionarProduto(cliente.getId(), codProd, quant);
-                                        } catch (InputMismatchException | ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
+                                            naoValido = false;
+                                        } catch (NumberFormatException | ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
                                             System.out.println(e.getMessage());
                                             naoValido = tentarNovamente(ler);
                                         }
@@ -191,7 +192,7 @@ public class Main {
                         case 4:
                             System.out.print("Qual produtos deseja proucurar:");
                             try {
-                                produtoView.pesquisaCatalogo(ler.nextLine());
+                                produtoView.pesquisaCatalogo(ler.nextLine(), ler);
                             } catch (ProdutoInvalidoException e) {
                                 System.out.println(e.getMessage());
                             }
@@ -206,8 +207,65 @@ public class Main {
                 }
 
                 // ----->  Area do Vendedor
-                if(logado instanceof Vendedor){
+                if(logado instanceof Vendedor vendedor){
+                    System.out.println("---------------- Area principal ---------------");
+                    opcao = validaInput(ler, new String[] {"[1] Minha conta", "[2] Criar Produto ", "[3] Ver estoque", "[4] Deslogar" });
 
+                    switch (opcao){
+                        case 1:
+
+                            naoValido = true;
+                            vendedorView.mostrarConta(vendedor);
+                            opcao = validaInput(ler, new String[]{"[1] Alterar registro", "[2] Mostrar histórico", "[3] voltar"});
+                            if (opcao == 1) {
+                                while (naoValido) {
+                                    try {
+                                        logado = vendaService.alterarVendedor(vendedor.getId(), ler);
+                                        naoValido = false;
+                                    } catch (VendedorNuloExcception | OperacaoVendaException e) {
+                                        System.out.println(e.getMessage());
+                                        naoValido = tentarNovamente(ler);
+                                    }
+                                }
+                            }
+                            else if(opcao == 2){
+                                while (naoValido) {
+                                    try {
+                                        vendedorView.mostrarHistorico(vendedor, ler);
+                                    } catch (OperacaoVendaException e) {
+                                        System.out.println(e.getMessage());
+                                        naoValido = false;
+                                    }
+                                }
+                            }
+                            else {
+                                break;
+                            }
+                            break;
+
+                        case 2:
+                            naoValido = true;
+                            while (naoValido) {
+                                try {
+                                    vendaService.criarProduto(vendedor.getId(), ler);
+                                    naoValido = false;
+                                } catch (VendedorNuloExcception | ProdutoInvalidoException | OperacaoVendaException e) {
+                                    System.out.println(e.getMessage());
+                                    naoValido = tentarNovamente(ler);
+                                }
+                            }
+                            break;
+
+
+                        case 3:
+                            vendedorView.dashProdutos(vendedor, ler);
+                            break;
+
+                        case 4:
+                            logado = null;
+                            break;
+
+                    }
                 }
 
             }

@@ -20,10 +20,9 @@ public class ClienteView {
 
     private final DecimalFormat df = new DecimalFormat("000");
 
-    public Cliente login(){
+    public Cliente login(Scanner ler){
         try{
             ClientesDAO dao = new ClientesDAO();
-            Scanner ler = new Scanner(System.in);
 
             System.out.println("------------ LOGIN --------------");
             System.out.print("Qual o seu email:");
@@ -42,10 +41,9 @@ public class ClienteView {
             throw new EntradaInvalidaException("entrada de valores inválidos");
         }
     }
-    public Cliente criarCliente(){
+    public Cliente criarCliente(Scanner ler){
 
         try {
-            Scanner ler = new Scanner(System.in);
             System.out.println("------------ CADASTRO DE CLIENTE --------------");
             System.out.print("Qual o seu nome:");
             String nome = ler.nextLine();
@@ -61,9 +59,8 @@ public class ClienteView {
         }
     }
 
-    public Cliente alterarCliente(Cliente cliente){
+    public Cliente alterarCliente(Cliente cliente, Scanner ler){
         try {
-            Scanner ler = new Scanner(System.in);
             System.out.println("------------- ALTERAÇÂO DE DADOS ----------------");
 
             System.out.println("(Apenas aperte enter se não quiser alterar um dado)");
@@ -115,9 +112,8 @@ public class ClienteView {
         }
     }
 
-    public void mostrarCarrinho(Cliente cliente){
+    public void mostrarCarrinho(Cliente cliente, Scanner ler){
         ClientesDAO dao = new ClientesDAO();
-        Scanner ler = new Scanner(System.in);
         ClienteService service = new ClienteService();
 
         Compra compraAtiva = dao.compraAtiva(cliente);
@@ -134,7 +130,7 @@ public class ClienteView {
             boolean entradaValida = false;
 
             while (!entradaValida) {
-                System.out.println("\n[1] gerar cupom fiscal\n[2] Finalizar compra\n[3] Remover Produto\n[4] Sair");
+                System.out.println("\n[2] Finalizar compra\n[3] Remover Produto\n[4] Sair");
                 System.out.print("O que você quer fazer: ");
 
                 try {
@@ -147,21 +143,22 @@ public class ClienteView {
 
             if(op == 1 ){
                 System.out.println("Qual o codigo da compra:");
-                Long idCupom = ler.nextLong();
-                ler.nextLine();
+                Long idCupom = Long.parseLong(ler.nextLine());
                 gerarNotaFiscal(idCupom);
             }
             else if (op == 2) {
                 try {
                     service.finalizarCompra(cliente);
+                    System.out.println("Compra finalizada");
+                    break;
                 } catch (CarrinhoNuloException |  OperacaoCompraException e) {
                     System.out.println(e.getMessage());
                 }
             }  else if(op == 3){
                 System.out.println("Qual o codigo do produto:");
-                Long idProd = ler.nextLong();
-                ler.nextLine();
+                Long idProd = Long.parseLong(ler.nextLine());
                 service.removerProduto(cliente.getId(), idProd);
+                System.out.println();
             } else if(op == 4){
                 break;
             }
@@ -171,15 +168,14 @@ public class ClienteView {
 
         }
     }
-    public void mostrarHistorico(Cliente cliente){
+    public void mostrarHistorico(Cliente cliente, Scanner ler){
         ClientesDAO dao = new ClientesDAO();
-        Scanner ler = new Scanner(System.in);
         int quantPaginas = (int) Math.ceil((double) dao.numCompras(cliente) /4);
         int paginaAtual = 1;
         while (true){
             List<Compra> compras = dao.getUltimasCompras(cliente,(paginaAtual-1)*4,4);
-            if(compras == null){
-                throw new CarrinhoNuloException("nenhuma Produto no carrinho");
+            if(compras.isEmpty()){
+                throw new CarrinhoNuloException("nenhum Produto no carrinho");
             }
             if(paginaAtual == 1){
                 System.out.println("\n-------------- Compras -------------------");

@@ -16,9 +16,8 @@ public class ProdutoView {
     private final DecimalFormat df = new DecimalFormat("000");
 
 
-    public void pesquisaCatalogo(String pesquisa) {
+    public void pesquisaCatalogo(String pesquisa,Scanner ler) {
         ProdutoDAO dao = new ProdutoDAO();
-        Scanner ler = new Scanner(System.in);
 
         int paginaAtual = 1;
 
@@ -92,9 +91,8 @@ public class ProdutoView {
         }
     }
 
-    public void exibirCatalogo() {
+    public void exibirCatalogo(Scanner ler) {
         ProdutoDAO dao = new ProdutoDAO();
-        Scanner ler = new Scanner(System.in);
 
         int paginaAtual = 1;
         int filtro = 0;
@@ -145,6 +143,7 @@ public class ProdutoView {
                 System.out.println("        Valor: " + produto.getValorUnitario());
                 System.out.print("Código: " + df.format(produto.getId_prod()));
                 System.out.println("        Vendidos: " + produto.getVendas());
+                System.out.println("Disponíveis: "+produto.getQuantidade());
                 System.out.println("=".repeat(40));
             }
 

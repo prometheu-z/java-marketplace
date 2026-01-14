@@ -6,6 +6,8 @@ import marketplace.exceptions.*;
 import marketplace.model.*;
 import marketplace.view.ClienteView;
 
+import java.util.Scanner;
+
 public class ClienteService {
     private EntityManager em;
 
@@ -50,11 +52,11 @@ public class ClienteService {
     }
 
 
-    public Cliente criarCliente(){
+    public Cliente criarCliente(Scanner ler){
         abreTransacao();
         ClienteView view = new ClienteView();
         try {
-             Cliente cliente = view.criarCliente();
+             Cliente cliente = view.criarCliente(ler);
              daoC.persistir(cliente);
 
              fechaTransacao();
@@ -77,7 +79,7 @@ public class ClienteService {
 
     }
 
-    public Cliente atualizarCliente(Long idCliente){
+    public Cliente atualizarCliente(Long idCliente, Scanner ler){
         abreTransacao();
         ClienteView view = new ClienteView();
 
@@ -86,7 +88,7 @@ public class ClienteService {
             if(cliente == null){
                 throw new ClienteInvalidoException("Cliente de código: "+ idCliente+" não encontrado");
             }
-            Cliente novoCliente = view.alterarCliente(cliente);
+            Cliente novoCliente = view.alterarCliente(cliente, ler);
 
             cliente.setNome(novoCliente.getNome());
             cliente.setEmail(novoCliente.getEmail());

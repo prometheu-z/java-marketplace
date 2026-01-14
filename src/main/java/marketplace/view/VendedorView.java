@@ -1,26 +1,23 @@
 package marketplace.view;
 
 import marketplace.dao.ClientesDAO;
+import marketplace.dao.CompraDAO;
+import marketplace.dao.ProdutoDAO;
 import marketplace.dao.VendedorDAO;
 import marketplace.exceptions.*;
-import marketplace.model.Cliente;
-import marketplace.model.Produto;
-import marketplace.model.Vendedor;
+import marketplace.model.*;
 import marketplace.service.VendedorService;
 
 import java.text.DecimalFormat;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class VendedorView {
 
     private final DecimalFormat df = new DecimalFormat("000");
 
-    public Vendedor login(){
+    public Vendedor login(Scanner ler){
         try{
             VendedorDAO dao = new VendedorDAO();
-            Scanner ler = new Scanner(System.in);
 
             System.out.println("------------ LOGIN --------------");
             System.out.print("Qual o seu cnpj:");
@@ -36,16 +33,15 @@ public class VendedorView {
             return vendedor;
 
         } catch (Exception e){
-            throw new EntradaInvalidaException("entrada de valores inválidos");
+            throw new OperacaoVendaException(e.getMessage());
         }
     }
 
-    public Vendedor criarVendedor(){
+    public Vendedor criarVendedor(Scanner ler){
 
 
 
         try {
-            Scanner ler = new Scanner(System.in);
             System.out.println("------------ CADASTRO DE LOJA--------------");
             System.out.print("Qual o nome fantasia da sua loja:");
             String nome = ler.nextLine();
@@ -62,9 +58,8 @@ public class VendedorView {
         }
     }
 
-    public Vendedor alterarVendedor(Vendedor vendedor){
+    public Vendedor alterarVendedor(Vendedor vendedor, Scanner ler){
         try {
-            Scanner ler = new Scanner(System.in);
             System.out.println("------------- ALTERAÇÂO DE DADOS ----------------");
 
             System.out.println("(Apenas aperte enter se não quiser alterar um dado)");
@@ -77,8 +72,8 @@ public class VendedorView {
 
             return new Vendedor(
                     nome.isEmpty() ? vendedor.getNomeLoja() : nome,
-                    vendedor.getCnpj(),
-                    senha.isEmpty() ? vendedor.getSenha() : senha);
+                    senha.isEmpty() ? vendedor.getSenha() : senha,
+                    vendedor.getCnpj());
 
         } catch (Exception e) {
             throw new EntradaInvalidaException("Entrada de valores inválidos");
@@ -86,19 +81,18 @@ public class VendedorView {
 
     }
 
-    public Produto criarProduto(){
+    public Produto criarProduto(Scanner ler){
 
         try {
-            Scanner ler = new Scanner(System.in);
             System.out.println("------------- CRIAR DE MERCADORIA ----------------");
             System.out.print("Qual o nome do produto:");
             String nome = ler.nextLine();
 
             System.out.print("Qual o preço do produto:");
-            Double preco = ler.nextDouble();
+            Double preco = Double.parseDouble(ler.nextLine().trim());
 
             System.out.print("Qual a quantidade em estoque:");
-            int estoque = ler.nextInt();
+            int estoque = Integer.parseInt(ler.nextLine().trim());
 
             return new Produto(nome, preco, estoque);
         } catch (Exception e) {
@@ -107,17 +101,15 @@ public class VendedorView {
 
 
     }
-    public Produto alterarProduto(Produto produto){
+    public Produto alterarProduto(Produto produto, Scanner ler){
         try {
-            Scanner ler = new Scanner(System.in);
             System.out.println("------------- ALTERAÇÂO DE MERCADORIA ----------------");
 
             System.out.print("Qual sera o novo nome do produto:");
             String nome = ler.nextLine();
 
             System.out.print("Qual será seu novo valor unitário:");
-            double valor = ler.nextDouble();
-            ler.nextLine();
+            double valor = Double.parseDouble(ler.nextLine().trim());
 
             System.out.print("Qual o seu estoque desse produto:");
             int esqtoque = ler.nextInt();
@@ -133,13 +125,185 @@ public class VendedorView {
 
     }
 
+    public void mostrarConta(Vendedor vendedor){
+        try{
+            CompraDAO dao = new CompraDAO();
 
-    public void dashProdutos(Vendedor vendedor){
+            System.out.println("---------------------------");
+
+            System.out.println("Loja: "+vendedor.getNomeLoja()+"        Cod: "+vendedor.getId());
+            System.out.println("cnpj: "+vendedor.getCnpj());
+            System.out.println("Senha: "+vendedor.getSenha());
+            System.out.println("Produtos vendidos: " +dao.totalVendasDoVendedor(vendedor.getId()));
+
+            System.out.println("---------------------------");
+
+
+
+        }catch (Exception e){
+            System.out.println("Erro inesperado:"+e.getMessage());
+        }
+    }
+
+    public void mostrarHistorico(Vendedor vendedor, Scanner ler) {
+        CompraDAO dao = new CompraDAO();
+        VendedorDAO daoV = new VendedorDAO();
+        int quantPaginas = (int) Math.ceil((double) daoV.numProdutosVendedor(vendedor) / 4);
+        int paginaAtual = 1;
+        while (true) {
+            List<ItemCompra> vendas = dao.getVendas(vendedor, (paginaAtual - 1) * 4, 4);
+            if (vendas.isEmpty()) {
+                throw new OperacaoVendaException("nenhum Produto vendido");
+            }
+            if (paginaAtual == 1) {
+                System.out.println("\n-------------- Vendas "+vendedor.getNomeLoja()+" -------------------");
+            }
+            System.out.println("\n\n          Pagina: " + paginaAtual + "/" + quantPaginas);
+
+            long idProd = (long) -1;
+            for (ItemCompra item : vendas) {
+                if(idProd != -1L && Objects.equals(item.getProduto().getId_prod(), idProd)){
+                    continue;
+                }
+
+                System.out.println("=".repeat(40));
+                System.out.print("Nome do Produto: " + item.getProduto().getNome());
+                System.out.println("        Código: " + df.format(item.getProduto().getId_prod()));
+                System.out.println("Quantidade vendida: " + item.getProduto().getVendas());
+                System.out.println("Valor das vendas: " + dao.totalVendas(item.getProduto()));
+                System.out.println("=".repeat(40));
+
+                idProd = item.getProduto().getId_prod();
+            }
+
+            System.out.println("\n");
+
+            int op = 0;
+            boolean entradaValida = false;
+
+            while (!entradaValida) {
+                if (paginaAtual > 1) {
+                    System.out.print("[1] voltar      ");
+                }
+                if (paginaAtual < quantPaginas) {
+                    System.out.print("[2] avançar");
+                }
+                System.out.println("\n[3] Vendas de um produto     [4] Sair");
+                System.out.print("O que você quer fazer: ");
+
+                try {
+                    op = Integer.parseInt(ler.nextLine());
+                    entradaValida = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Erro: digite um número válido.");
+                }
+            }
+
+            if (op == 1 && paginaAtual > 1) {
+                paginaAtual--;
+            } else if (op == 2 && paginaAtual < quantPaginas) {
+                paginaAtual++;
+            } else if (op == 3) {
+                try {
+                    System.out.println("Qual o codigo do produto:");
+                    Long prod = Long.parseLong(ler.nextLine());
+
+                    mostrarItens(prod, ler);
+                } catch (OperacaoVendaException e){
+                    System.out.println("erro: "+e.getMessage());
+                }
+                catch (NumberFormatException e) {
+                    System.out.println("Erro: digite um número válido.");
+                }
+
+            } else if(op == 4){
+                break;
+            }
+            else {
+                System.out.println("Opção inválida ou indisponível.");
+            }
+
+        }
+    }
+    private void mostrarItens(Long idProd, Scanner ler){
+        CompraDAO dao = new CompraDAO();
+        ProdutoDAO daoP = new ProdutoDAO();
+
+        Long idVendedor = (long) -1;
+        int quantPaginas = (int) Math.ceil((double) dao.numItensProdutos(idProd) / 4);
+        int paginaAtual = 1;
+        while (true) {
+            List<ItemCompra> vendas = dao.getVendasDeProduto(idProd, (paginaAtual - 1) * 4, 4);
+            if (vendas.isEmpty()) {
+                throw new OperacaoVendaException("Produto não encontrado");
+            }
+            if (paginaAtual == 1) {
+                System.out.println("\n-------------- Vendas "+daoP.buscaProId(idProd).getNome()+" -------------------");
+            }
+            System.out.println("\n\n          Pagina: " + paginaAtual + "/" + quantPaginas);
+
+            for (ItemCompra item : vendas) {
+
+                System.out.println("=".repeat(40));
+                System.out.print("Nome do Produto: " + item.getProduto().getNome());
+                System.out.print("Nome do Produto na Venda: " + item.getNomeProdAtual());
+                System.out.println("        Código: " + df.format(item.getProduto().getId_prod()));
+                System.out.println("Quantidade: " + item.getQuantidade());
+                System.out.println("Valor vendido: " + item.getSubTotal());
+                System.out.println("\nData: "+item.getCompra().getHorario().getDayOfMonth()+"/"+
+                        item.getCompra().getHorario().getMonthValue()+"/"+
+                        item.getCompra().getHorario().getYear()+"  "+
+                        item.getCompra().getHorario().getHour()+":"+
+                        item.getCompra().getHorario().getMinute()+":"+
+                        item.getCompra().getHorario().getSecond());
+                System.out.println("=".repeat(40));
+
+            }
+
+            System.out.println("\n");
+
+            int op = 0;
+            boolean entradaValida = false;
+
+            while (!entradaValida) {
+                if (paginaAtual > 1) {
+                    System.out.print("[1] voltar      ");
+                }
+                if (paginaAtual < quantPaginas) {
+                    System.out.print("[2] avançar");
+                }
+                System.out.println("\n[3] Sair");
+                System.out.print("O que você quer fazer: ");
+
+                try {
+                    op = Integer.parseInt(ler.nextLine());
+                    entradaValida = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Erro: digite um número válido.");
+                }
+            }
+
+            if (op == 1 && paginaAtual > 1) {
+                paginaAtual--;
+            } else if (op == 2 && paginaAtual < quantPaginas) {
+                paginaAtual++;
+            } else if (op == 3) {
+               break;
+
+            }
+            else {
+                System.out.println("Opção inválida ou indisponível.");
+            }
+
+        }
+
+    }
+
+    public void dashProdutos(Vendedor vendedor, Scanner ler){
         VendedorDAO dao = new VendedorDAO();
         VendedorService vs = new VendedorService();
 
 
-        Scanner ler = new Scanner(System.in);
         int quantPaginas = (int) Math.ceil((double) dao.numProdutosVendedor(vendedor) /4);
         int paginaAtual = 1;
         while (true){
@@ -154,6 +318,7 @@ public class VendedorView {
                 System.out.println("=".repeat(40));
                 System.out.println("Código: "+df.format(produto.getId_prod())+"        Vendas: "+produto.getVendas());
                 System.out.println("Nome: "+produto.getNome()+"         Estoque: "+produto.getQuantidade());
+                System.out.println("Preço: "+produto.getValorUnitario());
                 System.out.println("=".repeat(40));
 
             }
@@ -199,7 +364,7 @@ public class VendedorView {
                         continue;
                     }
                     try {
-                        vs.atualizarProduto(vendedor.getId(), cod);
+                        vs.atualizarProduto(vendedor.getId(), cod, ler);
                     } catch (ProdutoInvalidoException | VendedorNuloExcception | OperacaoVendaException e) {
                         System.out.println(e.getMessage());
                         cod = 0;
