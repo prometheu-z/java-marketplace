@@ -111,7 +111,9 @@ public class VendedorService {
 
             fechaTransacao();
 
-            System.out.println("Loja "+vendedor.getNomeLoja()+" atualizada");
+            System.out.println("Loja "+vendedor.getNomeLoja()+
+
+                    " atualizada");
 
             return vendedor;
 

@@ -1,5 +1,7 @@
 package marketplace.view;
 
+import jakarta.persistence.NoResultException;
+import marketplace.Main;
 import marketplace.dao.ClientesDAO;
 import marketplace.dao.CompraDAO;
 import marketplace.exceptions.CarrinhoNuloException;
@@ -16,6 +18,8 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static marketplace.Main.validaInput;
+
 public class ClienteView {
 
     private final DecimalFormat df = new DecimalFormat("000");
@@ -30,14 +34,13 @@ public class ClienteView {
             System.out.print("Qual sua senha:");
             String senha = ler.nextLine();
 
-            Cliente cliente = dao.Pesquisar(email, senha);
 
-            if(cliente == null){
-                throw new ClienteInvalidoException("cliente não encontrado");
-            }
-            return cliente;
+            return dao.Pesquisar(email, senha);
 
-        } catch (Exception e){
+        }catch (NoResultException e){
+            throw new ClienteInvalidoException("Nenhum cliente encontrado");
+        }
+        catch (Exception e){
             throw new EntradaInvalidaException("entrada de valores inválidos");
         }
     }
@@ -87,9 +90,12 @@ public class ClienteView {
 
 
 
-    public void mostrarConta(Cliente cliente){
+    public void mostrarConta(Cliente cliente, Scanner ler){
         try{
+            int opcao;
+            boolean naoValido = true;
             ClientesDAO dao = new ClientesDAO();
+            ClienteService service = new ClienteService();
 
             System.out.println("Nome: "+cliente.getNome()+"        Cod: "+cliente.getId());
             System.out.println("Email: "+cliente.getEmail());
@@ -105,8 +111,31 @@ public class ClienteView {
             }
             System.out.println("-----------------------------");
 
+            opcao = Main.validaInput(ler, new String[]{"[1] Alterar registro", "[2] Mostrar histórico", "[3] voltar"});
 
+            if (opcao == 1) {
+                while (naoValido) {
+                    try {
+                        cliente = service.atualizarCliente(cliente.getId(), ler);
+                        naoValido = false;
+                    } catch (ClienteInvalidoException | OperacaoCompraException e) {
+                        System.out.println(e.getMessage());
+                        naoValido = Main.tentarNovamente(ler);
+                    }
+                }
 
+            }
+            else if(opcao == 2){
+                while (naoValido) {
+                    try {
+                        this.mostrarHistorico(cliente, ler);
+                        naoValido = false;
+                    } catch (CarrinhoNuloException e) {
+                        System.out.println(e.getMessage());
+                        naoValido = Main.tentarNovamente(ler);
+                    }
+                }
+            }
         }catch (Exception e){
             System.out.println("Erro inesperado:"+e.getMessage());
         }
@@ -126,39 +155,20 @@ public class ClienteView {
 
             System.out.println("\n");
 
-            int op = 0;
-            boolean entradaValida = false;
+            int op;
+            op = Main.validaInput(ler, new String[] {"[1] Finalizar compra","[2] Remover Produto", "[3] Sair"});
 
-            while (!entradaValida) {
-                System.out.println("\n[2] Finalizar compra\n[3] Remover Produto\n[4] Sair");
-                System.out.print("O que você quer fazer: ");
 
-                try {
-                    op = Integer.parseInt(ler.nextLine());
-                    entradaValida = true;
-                } catch (InputMismatchException e) {
-                    System.out.println("Erro: digite um número válido.");
-                }
-            }
+            if (op == 1) {
+                service.finalizarCompra(cliente);
+                System.out.println("\nCompra finalizada");
+                break;
 
-            if(op == 1 ){
-                System.out.println("Qual o codigo da compra:");
-                Long idCupom = Long.parseLong(ler.nextLine());
-                gerarNotaFiscal(idCupom);
-            }
-            else if (op == 2) {
-                try {
-                    service.finalizarCompra(cliente);
-                    System.out.println("Compra finalizada");
-                    break;
-                } catch (CarrinhoNuloException |  OperacaoCompraException e) {
-                    System.out.println(e.getMessage());
-                }
-            }  else if(op == 3){
+            }  else if(op == 2){
                 System.out.println("Qual o codigo do produto:");
                 Long idProd = Long.parseLong(ler.nextLine());
                 service.removerProduto(cliente.getId(), idProd);
-                System.out.println();
+                System.out.println("\nProduto removido");
             } else if(op == 4){
                 break;
             }
@@ -197,32 +207,23 @@ public class ClienteView {
 
             System.out.println("\n");
 
-            int op = 0;
-            boolean entradaValida = false;
+            int op = Main.validaInput(ler, new String[] {"[1] Voltar", "[2] Avançar ","[3] Gerar compom fiscal","[4] Sair"});
 
-            while (!entradaValida) {
-                if (paginaAtual > 1) {
-                    System.out.print("[1] voltar      ");
+
+            if (op == 1) {
+                if(paginaAtual > 1){
+                    paginaAtual--;
                 }
+                else{
+                    System.out.println("você já está na pagina 1");
+                }
+            }
+            else if (op == 2) {
                 if (paginaAtual < quantPaginas) {
-                    System.out.print("[2] avançar");
+                    paginaAtual++;
+                } else {
+                    System.out.println("Você já está na ultima pagina");
                 }
-                System.out.println("\n[3] gerar cupom fiscal ");
-                System.out.print("O que você quer fazer: ");
-
-                try {
-                    op = Integer.parseInt(ler.nextLine());
-                    entradaValida = true;
-                } catch (NumberFormatException e) {
-                    System.out.println("Erro: digite um número válido.");
-                }
-            }
-
-            if(op == 1 && paginaAtual > 1){
-                paginaAtual--;
-            }
-            else if(op == 2 && paginaAtual < quantPaginas){
-                paginaAtual++;
             }
             else if(op == 3){
                 try {
@@ -244,6 +245,7 @@ public class ClienteView {
 
 
     }
+    //todo atualizar pro padrão item por pagina
     private void mostrarItens(List<ItemCompra> i){
         Iterator<ItemCompra> itens = i.iterator();
         Long idVendedor = (long) -1;
@@ -253,14 +255,15 @@ public class ClienteView {
 
             if(!Objects.equals(item.getVendedor().getId(), idVendedor)){
                 System.out.println("\n----------------------------");
-                System.out.println(item.getVendedor().getNomeLoja().toUpperCase()+"\ncnpj: "+
+                System.out.println(item.getVendedor().getNomeLoja().toUpperCase()+"\nCNPJ: "+
                         item.getVendedor().getCnpj());
+                System.out.println("\nCodigo de Compra: "+df.format(item.getId_itemVenda()));
                 System.out.println("\nCOD. QUANT. DESC.                     VALOR");
             }
 
 
 
-            System.out.printf(df.format(item.getId_itemVenda())+"  "+df.format(item.getQuantidade())+"    "+
+            System.out.printf(df.format(item.getProduto().getId_prod())+"  "+df.format(item.getQuantidade())+"    "+
                     item.getNomeProdAtual());
             for (int j = 0; j<25-item.getProduto().getNome().length(); j++){
                 System.out.print(" ");

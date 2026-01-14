@@ -1,10 +1,15 @@
 package marketplace.view;
 
+import marketplace.Main;
 import marketplace.dao.ClientesDAO;
 import marketplace.dao.ProdutoDAO;
+import marketplace.exceptions.ClienteInvalidoException;
+import marketplace.exceptions.OperacaoCompraException;
 import marketplace.exceptions.ProdutoInvalidoException;
+import marketplace.model.Cliente;
 import marketplace.model.Compra;
 import marketplace.model.Produto;
+import marketplace.service.ClienteService;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -16,15 +21,16 @@ public class ProdutoView {
     private final DecimalFormat df = new DecimalFormat("000");
 
 
-    public void pesquisaCatalogo(String pesquisa,Scanner ler) {
+    public void pesquisaCatalogo(Cliente cliente, String pesquisa,Scanner ler) {
         ProdutoDAO dao = new ProdutoDAO();
+        ClienteService service = new ClienteService();
 
         int paginaAtual = 1;
 
         while (true) {
             List<Produto> produtos = dao.pesquisarProdutos((paginaAtual - 1) * 4, 4, pesquisa);
             if(produtos.isEmpty()){
-                throw new ProdutoInvalidoException("Nenhum produto encontrado");
+                throw new ProdutoInvalidoException("Nenhum produto encontrado para: "+ pesquisa);
             }
             long totalProdutos = dao.numProdutos();
 
@@ -53,37 +59,52 @@ public class ProdutoView {
             System.out.println("\n");
 
             int op = 0;
-            boolean entradaValida = false;
+            op = Main.validaInput(ler, new String[] {"[1] Voltar", "[2] avançar", "[3] Mudar pesquisa",
+                    "[4] adicionar produto ao carrinho",
+                    "[5] Sair"
+            });
 
-            while (!entradaValida) {
-                if (paginaAtual > 1) {
-                    System.out.print("[1] voltar      ");
-                }
-                if (paginaAtual < quantPaginas) {
-                    System.out.print("[2] avançar");
-                }
-                System.out.println("\n[3] Mudar pesquisa      [4] sair");
-                System.out.print("O que você quer fazer: ");
 
-                try {
-                    op = Integer.parseInt(ler.nextLine());
-                    entradaValida = true;
-                } catch (InputMismatchException e) {
-                    System.out.println("Erro: digite um número válido.");
+
+
+            if (op == 1) {
+                if(paginaAtual > 1){
+                    paginaAtual--;
+                }
+                else{
+                    System.out.println("você já está na pagina 1");
                 }
             }
-
-
-            if (op == 1 && paginaAtual > 1) {
-                paginaAtual--;
-            }
-            else if (op == 2 && paginaAtual < quantPaginas) {
-                paginaAtual++;
+            else if (op == 2) {
+                if(paginaAtual < quantPaginas){
+                    paginaAtual++;
+                }
+                else {
+                    System.out.println("Você já está na ultima pagina");
+                }
             } else if (op == 3) {
-                System.out.print("Qual o pesquisa: ");
+                System.out.print("Qual a nova pesquisa: ");
                 pesquisa= ler.nextLine();
 
-            } else if (op == 4) {
+            } else if(op == 4){
+                boolean naoValido = true;
+                while (naoValido) {
+                    try {
+                        System.out.print("Qual o codigo do produto:");
+                        Long codProd = Long.parseLong(ler.nextLine().trim());
+                        System.out.print("Qual o quantidade:");
+                        int quant = Integer.parseInt(ler.nextLine().trim());
+
+                        service.adicionarProduto(cliente.getId(), codProd, quant);
+                        naoValido = false;
+                    } catch (NumberFormatException | ClienteInvalidoException | ProdutoInvalidoException |
+                             OperacaoCompraException e) {
+                        System.out.println(e.getMessage());
+                        naoValido = Main.tentarNovamente(ler);
+                    }
+                }
+            }
+            else if (op == 5) {
                 break;
             } else {
                 System.out.println("Opção inválida ou indisponível.");
@@ -91,8 +112,9 @@ public class ProdutoView {
         }
     }
 
-    public void exibirCatalogo(Scanner ler) {
+    public void exibirCatalogo(Cliente cliente, Scanner ler) {
         ProdutoDAO dao = new ProdutoDAO();
+        ClienteService service = new ClienteService();
 
         int paginaAtual = 1;
         int filtro = 0;
@@ -150,32 +172,28 @@ public class ProdutoView {
             System.out.println("\n");
 
             int op = 0;
-            boolean entradaValida = false;
+            op = Main.validaInput(ler, new String[] {"[1] Voltar", "[2] avançar", "[3] adicionar filtro",
+                    "[4] adicionar produto ao carrinho",
+                    "[5] Sair"
+            });
 
-            while (!entradaValida) {
-                if (paginaAtual > 1) {
-                    System.out.print("[1] voltar      ");
-                }
-                if (paginaAtual < quantPaginas) {
-                    System.out.print("[2] avançar");
-                }
-                System.out.println("\n[3] adicionar filtro      [4] sair");
-                System.out.print("O que você quer fazer: ");
 
-                try {
-                    op = Integer.parseInt(ler.nextLine());
-                    entradaValida = true;
-                } catch (InputMismatchException e) {
-                    System.out.println("Erro: digite um número válido.");
+
+            if (op == 1) {
+                if(paginaAtual > 1){
+                    paginaAtual--;
+                }
+                else{
+                    System.out.println("você já está na pagina 1");
                 }
             }
-
-
-            if (op == 1 && paginaAtual > 1) {
-                paginaAtual--;
-            }
-            else if (op == 2 && paginaAtual < quantPaginas) {
-                paginaAtual++;
+            else if (op == 2) {
+                if(paginaAtual < quantPaginas){
+                    paginaAtual++;
+                }
+                else {
+                    System.out.println("Você já está na ultima pagina");
+                }
             } else if (op == 3) {
                 int novoFiltro = 0;
                 do {
@@ -220,8 +238,27 @@ public class ProdutoView {
                 }
                 paginaAtual = 1;
             } else if (op == 4) {
+                boolean naoValido = true;
+                while (naoValido) {
+                    try {
+                        System.out.print("Qual o codigo do produto:");
+                        Long codProd = Long.parseLong(ler.nextLine().trim());
+                        System.out.print("Qual o quantidade:");
+                        int quant = Integer.parseInt(ler.nextLine().trim());
+
+                        service.adicionarProduto(cliente.getId(), codProd, quant);
+                        naoValido = false;
+                    } catch (NumberFormatException | ClienteInvalidoException | ProdutoInvalidoException |
+                             OperacaoCompraException e) {
+                        System.out.println(e.getMessage());
+                        naoValido = Main.tentarNovamente(ler);
+                    }
+                }
+            }
+            else if(op == 5){
                 break;
-            } else {
+            }
+            else {
                 System.out.println("Opção inválida ou indisponível.");
             }
         }

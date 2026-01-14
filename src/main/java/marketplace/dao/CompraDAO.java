@@ -44,10 +44,10 @@ public class CompraDAO extends DAO<Compra>{
     }
 
 
-    public Long totalVendas(Produto produto){
-        String jpql = "select coalesce(sum(i.valorAtual), 0) from ItemCompra i where i.produto = :produto";
+    public Double totalVendas(Produto produto){
+        String jpql = "select coalesce(sum(i.compra.valorTotal), 0) from ItemCompra i where i.produto.id = :produto";
 
-        return em.createQuery(jpql, Long.class).setParameter("produto", produto).getSingleResult();
+        return em.createQuery(jpql, Double.class).setParameter("produto", produto.getId_prod()).getSingleResult();
 
     }
 

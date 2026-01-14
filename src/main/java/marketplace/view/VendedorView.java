@@ -1,5 +1,7 @@
 package marketplace.view;
 
+import jakarta.persistence.NoResultException;
+import marketplace.Main;
 import marketplace.dao.ClientesDAO;
 import marketplace.dao.CompraDAO;
 import marketplace.dao.ProdutoDAO;
@@ -25,15 +27,13 @@ public class VendedorView {
             System.out.print("Qual sua senha:");
             String senha = ler.nextLine();
 
-            Vendedor vendedor = dao.Pesquisar(email, senha);
 
-            if(vendedor == null){
-                throw new VendedorNuloExcception("vendedor não encontrado");
-            }
-            return vendedor;
+            return dao.Pesquisar(email, senha);
 
-        } catch (Exception e){
-            throw new OperacaoVendaException(e.getMessage());
+        } catch (NoResultException e){
+            throw new VendedorNuloExcception("Nenhum vendedor encontrado");
+        } catch (Exception e) {
+            throw new EntradaInvalidaException("Erro inesperado, tente novamente");
         }
     }
 
@@ -125,9 +125,12 @@ public class VendedorView {
 
     }
 
-    public void mostrarConta(Vendedor vendedor){
+    public void mostrarConta(Vendedor vendedor, Scanner ler){
         try{
             CompraDAO dao = new CompraDAO();
+            VendedorService service = new VendedorService();
+            int opcao;
+            boolean naoValido = true;
 
             System.out.println("---------------------------");
 
@@ -138,8 +141,30 @@ public class VendedorView {
 
             System.out.println("---------------------------");
 
+            opcao = Main.validaInput(ler, new String[]{"[1] Alterar registro", "[2] Mostrar histórico", "[3] voltar"});
 
-
+            if (opcao == 1) {
+                while (naoValido) {
+                    try {
+                        vendedor = service.alterarVendedor(vendedor.getId(), ler);
+                        naoValido = false;
+                    } catch (VendedorNuloExcception | OperacaoVendaException e) {
+                        System.out.println(e.getMessage());
+                        naoValido = Main.tentarNovamente(ler);
+                    }
+                }
+            }
+            else if(opcao == 2){
+                while (naoValido) {
+                    try {
+                        this.mostrarHistorico(vendedor, ler);
+                        naoValido = false;
+                    } catch (OperacaoVendaException e) {
+                        System.out.println(e.getMessage());
+                        naoValido = Main.tentarNovamente(ler);
+                    }
+                }
+            }
         }catch (Exception e){
             System.out.println("Erro inesperado:"+e.getMessage());
         }
@@ -178,34 +203,27 @@ public class VendedorView {
 
             System.out.println("\n");
 
-            int op = 0;
-            boolean entradaValida = false;
+            int op = Main.validaInput(ler, new String[] {"[1] Voltar", "[2] Avançar", "[3] Vendas de um produto", "[4] Sair"});
 
-            while (!entradaValida) {
-                if (paginaAtual > 1) {
-                    System.out.print("[1] voltar      ");
-                }
-                if (paginaAtual < quantPaginas) {
-                    System.out.print("[2] avançar");
-                }
-                System.out.println("\n[3] Vendas de um produto     [4] Sair");
-                System.out.print("O que você quer fazer: ");
 
-                try {
-                    op = Integer.parseInt(ler.nextLine());
-                    entradaValida = true;
-                } catch (NumberFormatException e) {
-                    System.out.println("Erro: digite um número válido.");
+
+            if (op == 1) {
+                if(paginaAtual > 1){
+                    paginaAtual--;
+                }
+                else{
+                    System.out.println("você já está na pagina 1");
                 }
             }
-
-            if (op == 1 && paginaAtual > 1) {
-                paginaAtual--;
-            } else if (op == 2 && paginaAtual < quantPaginas) {
-                paginaAtual++;
+            else if (op == 2) {
+                if (paginaAtual < quantPaginas) {
+                    paginaAtual++;
+                } else {
+                    System.out.println("Você já está na ultima pagina");
+                }
             } else if (op == 3) {
                 try {
-                    System.out.println("Qual o codigo do produto:");
+                    System.out.print("Qual o codigo do produto:");
                     Long prod = Long.parseLong(ler.nextLine());
 
                     mostrarItens(prod, ler);
@@ -245,11 +263,15 @@ public class VendedorView {
             for (ItemCompra item : vendas) {
 
                 System.out.println("=".repeat(40));
-                System.out.print("Nome do Produto: " + item.getProduto().getNome());
+                System.out.print("Estado: ");
+                String s = item.getProduto().isAtivo() ? "Ativo" : "Desativado";
+                System.out.println(s);
+                System.out.println("Nome do Produto: " + item.getProduto().getNome());
                 System.out.print("Nome do Produto na Venda: " + item.getNomeProdAtual());
                 System.out.println("        Código: " + df.format(item.getProduto().getId_prod()));
                 System.out.println("Quantidade: " + item.getQuantidade());
-                System.out.println("Valor vendido: " + item.getSubTotal());
+                System.out.println("Valor Vendido: "+item.getValorAtual());
+                System.out.println("Total: " + item.getSubTotal());
                 System.out.println("\nData: "+item.getCompra().getHorario().getDayOfMonth()+"/"+
                         item.getCompra().getHorario().getMonthValue()+"/"+
                         item.getCompra().getHorario().getYear()+"  "+
@@ -262,31 +284,23 @@ public class VendedorView {
 
             System.out.println("\n");
 
-            int op = 0;
-            boolean entradaValida = false;
+            int op = Main.validaInput(ler, new String[] {"[1] Voltar ", "[2] Avançar", "[3] Sair"});
 
-            while (!entradaValida) {
-                if (paginaAtual > 1) {
-                    System.out.print("[1] voltar      ");
-                }
-                if (paginaAtual < quantPaginas) {
-                    System.out.print("[2] avançar");
-                }
-                System.out.println("\n[3] Sair");
-                System.out.print("O que você quer fazer: ");
 
-                try {
-                    op = Integer.parseInt(ler.nextLine());
-                    entradaValida = true;
-                } catch (NumberFormatException e) {
-                    System.out.println("Erro: digite um número válido.");
+            if (op == 1) {
+                if(paginaAtual > 1){
+                    paginaAtual--;
+                }
+                else{
+                    System.out.println("você já está na pagina 1");
                 }
             }
-
-            if (op == 1 && paginaAtual > 1) {
-                paginaAtual--;
-            } else if (op == 2 && paginaAtual < quantPaginas) {
-                paginaAtual++;
+            else if (op == 2) {
+                if (paginaAtual < quantPaginas) {
+                    paginaAtual++;
+                } else {
+                    System.out.println("Você já está na ultima pagina");
+                }
             } else if (op == 3) {
                break;
 
@@ -303,6 +317,7 @@ public class VendedorView {
         VendedorDAO dao = new VendedorDAO();
         VendedorService vs = new VendedorService();
 
+        long cod = 0L;
 
         int quantPaginas = (int) Math.ceil((double) dao.numProdutosVendedor(vendedor) /4);
         int paginaAtual = 1;
@@ -323,74 +338,60 @@ public class VendedorView {
 
             }
             System.out.println("\n");
-            int op = 0;
-            boolean entradaValida = false;
+            int op = Main.validaInput(ler, new String[] {"[1] Voltar", "[2] Avançar", "[3] Alterar produto", "[4] Excluir produto", "[5] Sair"});
 
-            while (!entradaValida) {
-                if (paginaAtual > 1) {
-                    System.out.print("[1] voltar      ");
+            if (op == 1) {
+                if(paginaAtual > 1){
+                    paginaAtual--;
                 }
+                else{
+                    System.out.println("você já está na pagina 1");
+                }
+            }
+            else if (op == 2) {
                 if (paginaAtual < quantPaginas) {
-                    System.out.print("[2] avançar");
+                    paginaAtual++;
+                } else {
+                    System.out.println("Você já está na ultima pagina");
                 }
-                System.out.println("\n[3] alterar    [4] excluir      [5] sair");
-                System.out.print("O que você quer fazer: ");
-
-                try {
-                    op = Integer.parseInt(ler.nextLine());
-                    entradaValida = true;
-                } catch (InputMismatchException e) {
-                    System.out.println("Erro: digite um número válido.");
-                }
-            }
-
-
-            if(op == 1 && paginaAtual > 1){
-                paginaAtual--;
-            }
-            else if(op == 2 && paginaAtual < quantPaginas){
-                paginaAtual++;
             }
             else if(op == 3){
-                long cod;
-                do {
-
+                while (cod == 0){
                     System.out.print("Digite o codigo para alterar:");
                     try {
                         cod = Long.parseLong(ler.nextLine().trim());
                     } catch (NumberFormatException e) {
                         System.out.println("Erro: digite um valor válido");
-                        cod = 0L;
                         continue;
                     }
                     try {
                         vs.atualizarProduto(vendedor.getId(), cod, ler);
+                        break;
                     } catch (ProdutoInvalidoException | VendedorNuloExcception | OperacaoVendaException e) {
                         System.out.println(e.getMessage());
                         cod = 0;
                     }
-                }while (cod == 0);
+                }
 
             }
             else if(op == 4){
-                long cod;
-                do {
+                while (cod == 0){
 
                     System.out.print("Digite o codigo para excluir:");
                     try {
                         cod = Long.parseLong(ler.nextLine().trim());
                     } catch (InputMismatchException e) {
                         System.out.println("Erro: digite um valor válido");
-                        cod = 0L;
                         continue;
                     }
                     try {
                         vs.excluirProduto(vendedor.getId(), cod);
+                        break;
                     } catch (ProdutoInvalidoException | VendedorNuloExcception | OperacaoVendaException e) {
                         System.out.println(e.getMessage());
                         cod = 0;
                     }
-                }while (cod == 0);
+                }
 
             }
             else if (op == 5) {

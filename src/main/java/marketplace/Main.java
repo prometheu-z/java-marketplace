@@ -67,8 +67,8 @@ public class Main {
                                 logado = vendedor;
                                 naoValido = false;
                             }
-                        } catch (OperacaoVendaException | EntradaInvalidaException | ClienteInvalidoException | VendedorNuloExcception e) {
-                            System.out.println("Erro:" + e.getMessage());
+                        } catch (EntradaInvalidaException | ClienteInvalidoException | VendedorNuloExcception e) {
+                            System.out.println(e.getMessage());
                             naoValido = tentarNovamente(ler);
 
                         }
@@ -79,7 +79,6 @@ public class Main {
 
                     while (naoValido) {
                         try {
-
                             logado = vendaService.criarVendedor(ler);
                             naoValido = false;
                         } catch (OperacaoVendaException e) {
@@ -97,7 +96,7 @@ public class Main {
                             logado = clienteService.criarCliente(ler);
                             naoValido = false;
                         } catch (OperacaoCompraException e) {
-                            System.out.println("Erro:" + e.getMessage());
+                            System.out.println(e.getMessage());
                             naoValido = tentarNovamente(ler);
                         }
                     }
@@ -115,32 +114,7 @@ public class Main {
                     switch (opcao){
                         case 1:
 
-                            naoValido = true;
-                            clienteView.mostrarConta(cliente);
-                            opcao = validaInput(ler, new String[]{"[1] Alterar registro", "[2] Mostrar histórico", "[3] voltar"});
-                            if (opcao == 1) {
-                                while (naoValido) {
-                                    try {
-                                        logado = clienteService.atualizarCliente(cliente.getId(), ler);
-                                        naoValido = false;
-                                    } catch (ClienteInvalidoException | OperacaoCompraException e) {
-                                        System.out.println(e.getMessage());
-                                        naoValido = tentarNovamente(ler);
-                                    }
-                                }
-                            }
-                            else if(opcao == 2){
-                                try {
-                                    clienteView.mostrarHistorico(cliente, ler);
-                                    naoValido = false;
-                                } catch (CarrinhoNuloException e) {
-                                    System.out.println(e.getMessage());
-                                    naoValido = false;
-                                }
-                            }
-                            else {
-                                break;
-                            }
+                            clienteView.mostrarConta(cliente, ler);
                             break;
 
                         case 2:
@@ -161,41 +135,22 @@ public class Main {
 
 
                         case 3:
-                            naoValido = true;
-                            try {
-                                produtoView.exibirCatalogo(ler);
-                                opcao = validaInput(ler, new String[]{"[1] Adicionar produto", "[2] voltar"});
-                                if (opcao == 1) {
-                                    while (naoValido) {
-                                        try {
-                                            System.out.print("Qual o codigo do produto:");
-                                            Long codProd = Long.parseLong(ler.nextLine().trim());
-                                            System.out.print("Qual o quantidade:");
-                                            int quant = Integer.parseInt(ler.nextLine().trim());
-
-                                            clienteService.adicionarProduto(cliente.getId(), codProd, quant);
-                                            naoValido = false;
-                                        } catch (NumberFormatException | ClienteInvalidoException | ProdutoInvalidoException | OperacaoCompraException e) {
-                                            System.out.println(e.getMessage());
-                                            naoValido = tentarNovamente(ler);
-                                        }
-                                    }
-                                }
-                                else {
-                                    break;
-                                }
-                            } catch (ProdutoInvalidoException e) {
-                                System.out.println(e.getMessage());
-                            }
+                            produtoView.exibirCatalogo(cliente,ler);
 
                             break;
                         case 4:
-                            System.out.print("Qual produtos deseja proucurar:");
-                            try {
-                                produtoView.pesquisaCatalogo(ler.nextLine(), ler);
-                            } catch (ProdutoInvalidoException e) {
-                                System.out.println(e.getMessage());
+                            naoValido = true;
+                            while (naoValido) {
+                                System.out.print("Qual produtos deseja proucurar:");
+                                try {
+                                    produtoView.pesquisaCatalogo(cliente, ler.nextLine(), ler);
+                                    break;
+                                } catch (ProdutoInvalidoException e) {
+                                    System.out.println(e.getMessage());
+                                    naoValido = tentarNovamente(ler);
+                                }
                             }
+
                             break;
 
                         case 5:
@@ -213,34 +168,7 @@ public class Main {
 
                     switch (opcao){
                         case 1:
-
-                            naoValido = true;
-                            vendedorView.mostrarConta(vendedor);
-                            opcao = validaInput(ler, new String[]{"[1] Alterar registro", "[2] Mostrar histórico", "[3] voltar"});
-                            if (opcao == 1) {
-                                while (naoValido) {
-                                    try {
-                                        logado = vendaService.alterarVendedor(vendedor.getId(), ler);
-                                        naoValido = false;
-                                    } catch (VendedorNuloExcception | OperacaoVendaException e) {
-                                        System.out.println(e.getMessage());
-                                        naoValido = tentarNovamente(ler);
-                                    }
-                                }
-                            }
-                            else if(opcao == 2){
-                                while (naoValido) {
-                                    try {
-                                        vendedorView.mostrarHistorico(vendedor, ler);
-                                    } catch (OperacaoVendaException e) {
-                                        System.out.println(e.getMessage());
-                                        naoValido = false;
-                                    }
-                                }
-                            }
-                            else {
-                                break;
-                            }
+                            vendedorView.mostrarConta(vendedor, ler);
                             break;
 
                         case 2:
@@ -273,7 +201,7 @@ public class Main {
         }
     }
 
-    private static int validaInput(Scanner ler, String[] opcoes){
+    public static int validaInput(Scanner ler, String[] opcoes){
         boolean naoValido = true;
         int variavel = 0;
         while (naoValido) {
@@ -296,7 +224,7 @@ public class Main {
         return variavel;
     }
 
-    private static boolean tentarNovamente(Scanner ler){
+    public static boolean tentarNovamente(Scanner ler){
         int opcao;
         opcao = validaInput(ler, new String[]{"[1] Tentar novamente", "[2] Voltar"});
         return opcao != 2;
