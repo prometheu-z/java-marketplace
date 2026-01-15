@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a55a69f7-7bdd-40e2-af89-482a9384b9c9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/view/ProdutoView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/view/ProdutoView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/EntidadeBD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/EntidadeBD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/model/Vendedor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/model/Vendedor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/marketplace/view/VendedorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/marketplace/view/VendedorView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +87,7 @@
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;bot&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/gabri/OneDrive/Documentos/java-marketplace&quot;,
@@ -96,6 +100,9 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\gabri\OneDrive\Documentos\jj\java-marketplace\src\main\resources" />
+      <recent name="C:\Users\gabri\OneDrive\Documentos\jj\java-marketplace\src\main\java\marketplace\service" />
+      <recent name="C:\Users\gabri\OneDrive\Documentos\jj\java-marketplace\src\main\resources\META-INF" />
       <recent name="C:\Users\gabri\OneDrive\Documentos\java-marketplace\src\main\resources" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -106,6 +113,9 @@
   </component>
   <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <envs>
+        <env name="GEMINI_API_KEY" value="AIzaSyAmPtl5thtxhqW6C7Yi4zuT4nkkjDSwggg" />
+      </envs>
       <option name="MAIN_CLASS_NAME" value="marketplace.Main" />
       <module name="java-marketplace" />
       <extension name="coverage">
@@ -179,6 +189,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.test" />
+      <item itemvalue="JUnit.ClienteTest.fazerCompra" />
+      <item itemvalue="JUnit.CompraTest.itemPeloProduto" />
+      <item itemvalue="JUnit.ProdutoTest.updateProduto" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />

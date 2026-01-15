@@ -1,6 +1,6 @@
 package marketplace;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
+import marketplace.bot.GerarBot;
 import marketplace.exceptions.*;
 import marketplace.model.*;
 import marketplace.service.ClienteService;
@@ -10,7 +10,6 @@ import marketplace.view.ProdutoView;
 import marketplace.view.VendedorView;
 
 import java.util.InputMismatchException;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
@@ -22,6 +21,7 @@ public class Main {
         ClienteView clienteView = new ClienteView();
         VendedorView vendedorView = new VendedorView();
         ProdutoView produtoView = new ProdutoView();
+        GerarBot gerarBot = new GerarBot();
 
         Scanner ler = new Scanner(System.in);
         boolean sistemaRodando = true;
@@ -30,6 +30,8 @@ public class Main {
         boolean naoValido;
 
         int opcao;
+
+
 
 
         while (sistemaRodando) {
@@ -100,6 +102,9 @@ public class Main {
                             naoValido = tentarNovamente(ler);
                         }
                     }
+                    break;
+                case 4:
+                    sistemaRodando = false;
                     break;
 
             }
