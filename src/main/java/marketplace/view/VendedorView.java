@@ -50,9 +50,12 @@ public class VendedorView {
             String cnpj = ler.nextLine();
             System.out.print("Crie uma senha:");
             String senha = ler.nextLine();
+            System.out.print("Qual o seu nicho:");
+            String nicho = ler.nextLine();
             System.out.println("\nLoja cadastrada!");
 
-            return new Vendedor(nome, cnpj, senha);
+            return new Vendedor(nome, senha, cnpj, nicho);
+
         } catch (Exception e) {
             throw new EntradaInvalidaException("Entrada de valores inválidos");
         }
@@ -73,7 +76,8 @@ public class VendedorView {
             return new Vendedor(
                     nome.isEmpty() ? vendedor.getNomeLoja() : nome,
                     senha.isEmpty() ? vendedor.getSenha() : senha,
-                    vendedor.getCnpj());
+                    vendedor.getCnpj(),
+                    vendedor.getNicho());
 
         } catch (Exception e) {
             throw new EntradaInvalidaException("Entrada de valores inválidos");
