@@ -2,7 +2,6 @@ package marketplace.view;
 
 import jakarta.persistence.NoResultException;
 import marketplace.Main;
-import marketplace.dao.ClientesDAO;
 import marketplace.dao.CompraDAO;
 import marketplace.dao.ProdutoDAO;
 import marketplace.dao.VendedorDAO;
@@ -28,7 +27,7 @@ public class VendedorView {
             String senha = ler.nextLine();
 
 
-            return dao.Pesquisar(email, senha);
+            return dao.pesquisar(email, senha);
 
         } catch (NoResultException e){
             throw new VendedorNuloExcception("Nenhum vendedor encontrado");

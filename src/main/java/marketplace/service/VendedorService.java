@@ -247,5 +247,27 @@ public class VendedorService {
 
     }
 
+    public void criarProdutoBOT(Long idVendedor, Produto produto){
+
+        abreTransacao();
+
+        Vendedor vendedor = daoV.buscarPorId(idVendedor);
+
+        vendedor.adicionarEstoque(produto);
+        daoP.persistir(produto);
+
+        daoP.merge(produto);
+
+        fechaTransacao();
+    }
+
+    public void criarVendedorBOT(Vendedor vendedor){
+        abreTransacao();
+
+        daoV.persistir(vendedor);
+
+        fechaTransacao();
+
+    }
 
 }

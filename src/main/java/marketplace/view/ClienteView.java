@@ -169,7 +169,7 @@ public class ClienteView {
                 Long idProd = Long.parseLong(ler.nextLine());
                 service.removerProduto(cliente.getId(), idProd);
                 System.out.println("\nProduto removido");
-            } else if(op == 4){
+            } else if(op == 3){
                 break;
             }
             else {
@@ -227,7 +227,7 @@ public class ClienteView {
             }
             else if(op == 3){
                 try {
-                    System.out.println("Qual o codigo da compra:");
+                    System.out.print("Qual o codigo da compra:");
                     Long idCupom = Long.parseLong(ler.nextLine());
 
                     gerarNotaFiscal(idCupom);
@@ -262,13 +262,13 @@ public class ClienteView {
             }
 
 
-
+            double valorReal = item.getValorAtual() * item.getQuantidade();
             System.out.printf(df.format(item.getProduto().getId_prod())+"  "+df.format(item.getQuantidade())+"    "+
                     item.getNomeProdAtual());
             for (int j = 0; j<25-item.getProduto().getNome().length(); j++){
                 System.out.print(" ");
             }
-            System.out.println(item.getSubTotal());
+            System.out.println("      "+valorReal);
             idVendedor = item.getVendedor().getId();
         }
 

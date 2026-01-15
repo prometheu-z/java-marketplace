@@ -3,6 +3,7 @@ package marketplace.dao;
 import jakarta.persistence.EntityManager;
 import marketplace.model.Cliente;
 import marketplace.model.Compra;
+import marketplace.model.Vendedor;
 
 import java.util.List;
 
@@ -10,6 +11,18 @@ public class ClientesDAO extends DAO<Cliente> {
 
     public ClientesDAO() {
         super(Cliente.class);
+    }
+
+
+    public List<Cliente> clientesBOT( ){
+        String jpql  = "select c from Cliente c where c.bot = true and c.ativo = true";
+
+        return em.createQuery(jpql, Cliente.class).getResultList();
+    }
+    public List<Cliente> clientesCompraAtivaBOT( ){
+        String jpql  = "select c from Cliente c join c.compras ped where c.bot = true and c.ativo = true and ped.ativo = true";
+
+        return em.createQuery(jpql, Cliente.class).getResultList();
     }
 
     public Cliente Pesquisar(String email, String senha){

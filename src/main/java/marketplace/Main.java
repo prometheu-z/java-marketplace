@@ -1,6 +1,6 @@
 package marketplace;
 
-import marketplace.bot.GerarBot;
+import marketplace.bot.BotRunner;
 import marketplace.exceptions.*;
 import marketplace.model.*;
 import marketplace.service.ClienteService;
@@ -21,7 +21,6 @@ public class Main {
         ClienteView clienteView = new ClienteView();
         VendedorView vendedorView = new VendedorView();
         ProdutoView produtoView = new ProdutoView();
-        GerarBot gerarBot = new GerarBot();
 
         Scanner ler = new Scanner(System.in);
         boolean sistemaRodando = true;
@@ -32,7 +31,7 @@ public class Main {
         int opcao;
 
 
-
+        BotRunner botR = new BotRunner();
 
         while (sistemaRodando) {
 
@@ -66,6 +65,7 @@ public class Main {
                                 Vendedor vendedor = vendedorView.login(ler);
                                 System.out.println("Login bem sucedido, Bem vindo " + vendedor.getNomeLoja());
 
+                                botR.iniciarAutomacao();
                                 logado = vendedor;
                                 naoValido = false;
                             }
@@ -82,6 +82,7 @@ public class Main {
                     while (naoValido) {
                         try {
                             logado = vendaService.criarVendedor(ler);
+                            botR.iniciarAutomacao();
                             naoValido = false;
                         } catch (OperacaoVendaException e) {
                             System.out.println(e.getMessage());
@@ -96,6 +97,7 @@ public class Main {
                         try {
 
                             logado = clienteService.criarCliente(ler);
+                            botR.iniciarAutomacao();
                             naoValido = false;
                         } catch (OperacaoCompraException e) {
                             System.out.println(e.getMessage());
@@ -104,6 +106,7 @@ public class Main {
                     }
                     break;
                 case 4:
+                    botR.pararAutomacao();
                     sistemaRodando = false;
                     break;
 

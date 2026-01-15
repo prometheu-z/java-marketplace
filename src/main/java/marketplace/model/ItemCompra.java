@@ -41,10 +41,7 @@ public class ItemCompra extends EntidadeBD{
         this.nomeProdAtual = produto.getNome();
         this.valorAtual = produto.getValorUnitario();
         this.vendedor = produto.getVendedor();
-    }
 
-    public Double getSubTotal(){
-        return this.quantidade * this.valorAtual;
     }
 
 
