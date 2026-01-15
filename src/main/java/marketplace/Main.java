@@ -135,7 +135,16 @@ public class Main {
 
 
                         case 3:
-                            produtoView.exibirCatalogo(cliente,ler);
+                            naoValido = true;
+                            while (naoValido) {
+                                try {
+                                    produtoView.exibirCatalogo(cliente, ler);
+                                    break;
+                                } catch (ProdutoInvalidoException e) {
+                                    System.out.println(e.getMessage());
+                                    naoValido = tentarNovamente(ler);
+                                }
+                            }
 
                             break;
                         case 4:

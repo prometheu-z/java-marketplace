@@ -200,7 +200,7 @@ public class ProdutoView {
                     System.out.println("\n=== ESCOLHA O FILTRO ===");
                     System.out.println("[0] Limpar Filtros (Ver tudo)");
                     System.out.println("[1] Ordem alfabética");
-                    System.out.println("[2] Preço mínimo");
+                    System.out.println("[2] Preço de até:");
                     System.out.println("[3] Mais vendidos");
                     System.out.print("Qual o filtro: ");
                     try {
