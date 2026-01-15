@@ -22,6 +22,9 @@ public class Vendedor extends EntidadeBD{
     @Column(nullable = false)
     private String senha;
 
+    @Column(nullable = false)
+    private String nicho;
+
     @OneToMany(mappedBy = "vendedor",cascade = CascadeType.ALL)
     private List<Produto> estoque = new ArrayList<>();
 
@@ -32,10 +35,11 @@ public class Vendedor extends EntidadeBD{
     public Vendedor() {
     }
 
-    public Vendedor(String nomeLoja, String senha, String cnpj) {
+    public Vendedor(String nomeLoja, String senha, String cnpj, String nicho) {
         this.senha = senha;
         this.cnpj = cnpj;
         this.nomeLoja = nomeLoja;
+        this.nicho = nicho;
     }
 
     public void adicionarEstoque(Produto produto){
@@ -104,5 +108,13 @@ public class Vendedor extends EntidadeBD{
 
     public void setItemvendas(List<ItemCompra> itemvendas) {
         this.itemvendas = itemvendas;
+    }
+
+    public String getNicho() {
+        return nicho;
+    }
+
+    public void setNicho(String nicho) {
+        this.nicho = nicho;
     }
 }
