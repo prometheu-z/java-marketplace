@@ -240,4 +240,13 @@ public class ClienteService {
 
     }
 
+    public void criarClienteBOT(Cliente cliente){
+        abreTransacao();
+
+        daoC.persistir(cliente);
+
+        fechaTransacao();
+
+    }
+
 }

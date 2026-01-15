@@ -2,21 +2,30 @@ package marketplace.service;
 
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
+import com.google.gson.*;
 import marketplace.model.Vendedor;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Objects;
 import java.util.Properties;
 
 public class BotService {
 
+    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+
+
     private String getApi_key()  {
         try {
             Properties prop = new Properties();
+            FileInputStream input = new FileInputStream("config.properties");
+            prop.load(input);
 
-            prop.load(BotService.class.getResourceAsStream("/config.properties"));
-
-            return prop.getProperty("GEMINI_API_KEY");
+            return prop.getProperty("gemini.api.key");
         } catch (IOException e) {
             System.out.println("erro:"+e.getMessage());
             return null;
@@ -25,30 +34,77 @@ public class BotService {
 
     public String enviarPrompt(String prompt){
 
-        Client client = Client.builder()
-                .apiKey(getApi_key())
-                .build();
+        try {
+            String apiKey = getApi_key();
+            if (apiKey == null) {
+                return null;
+            }
 
-        GenerateContentResponse response = client.models.generateContent(
-                "gemini-3-flash-preview",
-                prompt,
-                null
-        );
+            JsonObject textPart = new JsonObject();
+            textPart.addProperty("text", prompt);
 
+            JsonArray parts = new JsonArray();
+            parts.add(textPart);
 
+            JsonObject content = new JsonObject();
+            content.add("parts", parts);
 
-        return extrair(Objects.requireNonNull(response.text()));
-    }
+            JsonArray contents = new JsonArray();
+            contents.add(content);
 
-    private String extrair(String texto) {
-        if (texto == null) return null;
+            JsonObject bodyJson = new JsonObject();
+            bodyJson.add("contents", contents);
 
-        if (texto.contains("```json")) {
-            texto = texto.split("```json")[1].split("```")[0];
-        } else if (texto.contains("```")) {
-            texto = texto.split("```")[1].split("```")[0];
+            String requestBody = new Gson().toJson(bodyJson);
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(API_URL + "?key=" + apiKey))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                return extrair(response.body());
+            }
+            else {
+                return null;
+            }
+        } catch (IOException | InterruptedException e) {
+            return null;
         }
 
+    }
+
+    private String extrair(String json) {
+
+        try {
+            JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+            JsonArray candidates = jsonObject.getAsJsonArray("candidates");
+            if (candidates != null && !candidates.isEmpty()) {
+                JsonObject content = candidates.get(0).getAsJsonObject().getAsJsonObject("content");
+                JsonArray parts = content.getAsJsonArray("parts");
+                String texto = parts.get(0).getAsJsonObject().get("text").getAsString();
+
+                return limpar(texto);
+            }
+        } catch (JsonSyntaxException e) {
+            System.out.println("Erro:"+e.getMessage());
+
+        }
+        return null;
+
+    }
+
+    private String limpar(String texto) {
+        if (texto == null) return null;
+        if (texto.contains("```json")) {
+            return texto.split("```json")[1].split("```")[0].trim();
+        } else if (texto.contains("```")) {
+            return texto.split("```")[1].split("```")[0].trim();
+        }
         return texto.trim();
     }
 

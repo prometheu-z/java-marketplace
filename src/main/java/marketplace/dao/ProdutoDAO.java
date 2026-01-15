@@ -17,7 +17,6 @@ public class ProdutoDAO extends DAO<Produto> {
 
 
 
-
     public Long numProdutos(){
         String jpql = "select Count(p) from Produto p where p.ativo = true and p.quantidade > 0";
         return em.createQuery(jpql, Long.class).getSingleResult();

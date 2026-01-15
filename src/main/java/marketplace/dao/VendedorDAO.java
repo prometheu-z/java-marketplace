@@ -12,8 +12,14 @@ public class VendedorDAO extends DAO<Vendedor> {
         super(Vendedor.class);
     }
 
-    public Vendedor Pesquisar(String cnpj, String senha){
-        String jpql  = "select v from Vendedor v where v.cnpj = :cnpj and v.senha = :senha";
+    public List<Vendedor> vendedoresBOT( ){
+        String jpql  = "select v from Vendedor v where v.bot = true and v.ativo = true";
+
+        return em.createQuery(jpql, Vendedor.class).getResultList();
+    }
+
+    public Vendedor pesquisar(String cnpj, String senha){
+        String jpql  = "select v from Vendedor v where v.cnpj = :cnpj and v.senha = :senha and v.ativo = true";
 
         return em.createQuery(jpql, Vendedor.class).setParameter("cnpj", cnpj).setParameter("senha", senha)
                 .getSingleResult();
