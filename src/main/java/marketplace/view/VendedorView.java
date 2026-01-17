@@ -274,7 +274,7 @@ public class VendedorView {
                 System.out.println("        Código: " + df.format(item.getProduto().getId_prod()));
                 System.out.println("Quantidade: " + item.getQuantidade());
                 System.out.println("Valor Vendido: "+item.getValorAtual());
-                System.out.println("Total: " + item.getSubTotal());
+                System.out.println("Total: " + item.getQuantidade()*item.getValorAtual());
                 System.out.println("\nData: "+item.getCompra().getHorario().getDayOfMonth()+"/"+
                         item.getCompra().getHorario().getMonthValue()+"/"+
                         item.getCompra().getHorario().getYear()+"  "+

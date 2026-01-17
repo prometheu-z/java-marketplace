@@ -70,6 +70,7 @@ public class BotService {
                 return extrair(response.body());
             }
             else {
+                System.out.println(response.body());
                 return null;
             }
         } catch (IOException | InterruptedException e) {

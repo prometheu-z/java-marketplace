@@ -53,6 +53,7 @@ public class ProdutoView {
                 System.out.println("        Valor: " + produto.getValorUnitario());
                 System.out.print("Código: " + df.format(produto.getId_prod()));
                 System.out.println("        Vendidos: " + produto.getVendas());
+                System.out.println("Disponíveis: "+produto.getQuantidade());
                 System.out.println("=".repeat(40));
             }
 
@@ -96,7 +97,7 @@ public class ProdutoView {
                         int quant = Integer.parseInt(ler.nextLine().trim());
 
                         service.adicionarProduto(cliente.getId(), codProd, quant);
-                        naoValido = false;
+                        break;
                     } catch (NumberFormatException | ClienteInvalidoException | ProdutoInvalidoException |
                              OperacaoCompraException e) {
                         System.out.println(e.getMessage());
@@ -247,7 +248,8 @@ public class ProdutoView {
                         int quant = Integer.parseInt(ler.nextLine().trim());
 
                         service.adicionarProduto(cliente.getId(), codProd, quant);
-                        naoValido = false;
+                        System.out.println(dao.buscaProId(codProd).getNome()+" adicionado ao carrinho");
+                        break;
                     } catch (NumberFormatException | ClienteInvalidoException | ProdutoInvalidoException |
                              OperacaoCompraException e) {
                         System.out.println(e.getMessage());

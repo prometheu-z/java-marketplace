@@ -129,6 +129,10 @@ public class ClienteService {
                 throw new ClienteInvalidoException("Cliente de código: "+ idCliente+" não encontrado");
             }
 
+            if(quantidade <= 0){
+                throw new OperacaoCompraException("Quantidade inválida");
+            }
+
             Produto produto = daoP.buscarPorId(idProduto);
             if(produto == null || !produto.temEstoque(quantidade) || !produto.isAtivo() ){
                 throw new ProdutoInvalidoException("Produto de código: "+idProduto+" não encontrado/inativo ou fora de estoque");

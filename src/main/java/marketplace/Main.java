@@ -52,23 +52,22 @@ public class Main {
                             int tipoUser = validaInput(ler, new String[]{"[1] Sou Cliente", "[2] Sou Vendedor", "[3] Voltar"});
 
                             if (tipoUser == 3) {
-                                naoValido = false;
                                 break;
                             }
                             if (tipoUser == 1) {
                                 Cliente cliente = clienteView.login(ler);
                                 System.out.println("Login bem sucedido, Bem vindo " + cliente.getNome());
 
+                                botR.iniciarAutomacao();
                                 logado = cliente;
-                                naoValido = false;
                             } else {
                                 Vendedor vendedor = vendedorView.login(ler);
                                 System.out.println("Login bem sucedido, Bem vindo " + vendedor.getNomeLoja());
 
                                 botR.iniciarAutomacao();
                                 logado = vendedor;
-                                naoValido = false;
                             }
+                            naoValido = false;
                         } catch (EntradaInvalidaException | ClienteInvalidoException | VendedorNuloExcception e) {
                             System.out.println(e.getMessage());
                             naoValido = tentarNovamente(ler);
