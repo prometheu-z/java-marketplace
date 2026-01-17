@@ -24,7 +24,6 @@ public class BotRunner {
                         botService.criarVendedor();
                         break;
                     case 1:
-
                         botService.criarProduto();
                         break;
                     case 2:
@@ -32,8 +31,15 @@ public class BotRunner {
                         break;
                 }
 
-                botService.fazerCompra();
-                botService.finalizarCompra();
+                for (int i = 0; i < 4; i++) {
+
+                    botService.fazerCompra();
+                }
+                for (int i = 0; i < 3; i++) {
+
+                    botService.finalizarCompra();
+                }
+
 
                 ciclo++;
             }catch (Exception e){

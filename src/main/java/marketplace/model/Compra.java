@@ -51,12 +51,12 @@ public class Compra extends EntidadeBD{
         }
         ItemCompra item = new ItemCompra(this, produto, quantidade);
         this.itens.add(item);
-        this.valorTotal += item.getSubTotal();
+        this.valorTotal += item.getQuantidade() * item.getValorAtual();
     }
     public void removerItem(ItemCompra item) {
 
         this.itens.remove(item);
-        this.valorTotal -= item.getSubTotal();
+        this.valorTotal -= item.getQuantidade() * item.getValorAtual();
     }
 
     // adicionar exceçao de venda vazia

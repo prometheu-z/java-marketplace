@@ -6,6 +6,7 @@ import marketplace.dao.ClientesDAO;
 import marketplace.dao.CompraDAO;
 import marketplace.dao.ProdutoDAO;
 import marketplace.dao.VendedorDAO;
+import marketplace.exceptions.ProdutoInvalidoException;
 import marketplace.model.Cliente;
 import marketplace.model.Produto;
 import marketplace.model.Vendedor;
@@ -40,7 +41,7 @@ public class GerarBot {
 
 
     public void criarCliente(){
-        String prompt = "Gere uma lista com 10 perfis de clientes brasileiros fictícios para marketplace. " +
+        String prompt = "Gere uma lista com 5 perfis de clientes brasileiros fictícios para marketplace. " +
                 "Responda APENAS com um JSON Array válido (sem markdown), neste formato: " +
                 "[ { \"nome\": \"String\", \"email\": \"String\", \"senha\": \"String\" }, ... ]";
 
@@ -71,7 +72,7 @@ public class GerarBot {
 
     public void criarVendedor() {
 
-        String prompt = "Gere uma lista com  perfis de vendedores (lojas) fictícios para marketplace. " +
+        String prompt = "Gere uma lista com 5 perfis de vendedores (lojas) fictícios para marketplace. " +
                 "Varie os nichos (eletrônicos, roupas, móveis, etc). " +
                 "Responda APENAS com um JSON Array válido (sem markdown), neste formato: " +
                 "[ { \"nomeLoja\": \"String\", \"cnpj\": \"String\", " +
@@ -115,7 +116,7 @@ public class GerarBot {
         Vendedor vendedor = vendedores.get(rand.nextInt(vendedores.size()));
 
 
-        String prompt = "Gere uma lista entre 1 ou 10 produtos para um loja fictícia chamada "+vendedor.getNomeLoja()+" em um marketplace. " +
+        String prompt = "Gere uma lista entre 1 a 10 produtos para um loja fictícia chamada "+vendedor.getNomeLoja()+" em um marketplace. " +
                 "Varie os objetos de acordo com o nicho: "+vendedor.getNicho()+". " +
                 "Responda APENAS com um JSON Array válido (sem markdown), neste formato: " +
                 "\"nome\": \"String\", \"valorUnitario\": \"Double\", \"quantidade\": \"int\" }, ... ]";
@@ -157,6 +158,7 @@ public class GerarBot {
 
         Cliente cliente = clientes.get(rand.nextInt(clientes.size()));
 
+
         long totalProdutos = daoP.numProdutos();
 
 
@@ -164,29 +166,51 @@ public class GerarBot {
             return;
         }
 
-        long secaoAleLong = rand.nextLong(totalProdutos);
-        int secaoAle = (int) secaoAleLong;
+
 
         try {
+            long secaoAleLong = rand.nextLong(totalProdutos/2);
 
-            List<Produto> novosProdutos = daoP.listarProdutos(secaoAle, secaoAle+3);
+            int secaoAle = (int) secaoAleLong;
+            int fimAle= secaoAle+secaoAle/2;
 
-            if (novosProdutos != null) {
-
-                for(Produto produto : novosProdutos){
-                    int quant = rand.nextInt(produto.getQuantidade()/2);
-                    service.adicionarProduto(cliente.getId(), produto.getId_prod(), quant);
-
-
-                    daoc.itemPeloProduto(dao.compraAtiva(cliente), produto.getId_prod()).setBot(true);
-                }
+            if(totalProdutos <= 4){
+                secaoAle = 0;
+                fimAle = (int ) totalProdutos;
             }
-            cliente.getCompras().forEach(c -> c.setBot(true));
 
-            dao.merge(cliente);
+            List<Produto> novosProdutos = daoP.listarProdutos(secaoAle, fimAle);
 
-        } catch (Exception e) {
-            System.out.println("Erro fazendo compra de cliente: "+cliente.getId());
+
+            if (novosProdutos == null) {
+                return;
+            }
+
+            int cont = 0;
+            for(Produto produto : novosProdutos){
+                if(cont >4){
+                    break;
+                }
+                int quant = rand.nextInt(produto.getQuantidade())+1;
+
+
+
+                service.adicionarProduto(cliente.getId(), produto.getId_prod(), quant);
+
+
+                daoc.itemPeloProduto(dao.compraAtiva(cliente), produto.getId_prod()).setBot(true);
+                cont ++;
+
+                daoc.merge(dao.compraAtiva(cliente));
+            }
+
+
+
+        } catch (ProdutoInvalidoException e){
+            System.out.println(e.getMessage());
+        }
+        catch (Exception e) {
+            System.out.println("Erro fazendo compra de cliente: "+cliente.getId()+" "+e.getMessage());
         }
 
     }
@@ -197,9 +221,6 @@ public class GerarBot {
 
         List<Cliente> clientes = dao.clientesCompraAtivaBOT();
 
-        for (Cliente c : clientes){
-            System.out.println("Clientes compra ativa:"+c.getId());
-        }
 
         if(clientes.isEmpty()){
             return;
@@ -207,15 +228,16 @@ public class GerarBot {
 
         Random rand = new Random();
 
-        Cliente cliente = clientes.get(rand.nextInt(clientes.size()));
+        while (true) {
 
+            Cliente cliente = clientes.get(rand.nextInt(clientes.size()));
 
+            try {
 
-        try {
-
-            service.finalizarCompra(cliente);
-        } catch (Exception e) {
-            System.out.println("Erro finalizando compra de cliente: "+cliente.getId());
+                service.finalizarCompra(cliente);
+                break;
+            } catch (Exception ignored) {
+            }
         }
 
     }
