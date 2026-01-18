@@ -67,6 +67,7 @@ public class ClienteService {
             return cliente;
 
         }catch (EntradaInvalidaException e ){
+            desfazerTransacao();
             System.out.println("Operaçao cancelada: "+e.getMessage());
         } catch (RuntimeException e){
             desfazerTransacao();

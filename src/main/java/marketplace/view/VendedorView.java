@@ -88,6 +88,8 @@ public class VendedorView {
 
         try {
             System.out.println("------------- CRIAR DE MERCADORIA ----------------");
+
+
             System.out.print("Qual o nome do produto:");
             String nome = ler.nextLine();
 
@@ -108,25 +110,42 @@ public class VendedorView {
         try {
             System.out.println("------------- ALTERAÇÂO DE MERCADORIA ----------------");
 
+
+            System.out.println("(Apenas aperte enter se não quiser alterar um dado)");
+
             System.out.print("Qual sera o novo nome do produto:");
             String nome = ler.nextLine();
 
             System.out.print("Qual será seu novo valor unitário:");
-            double valor = Double.parseDouble(ler.nextLine().trim());
+            String valor = ler.nextLine();
 
             System.out.print("Qual o seu estoque desse produto:");
-            int esqtoque = ler.nextInt();
+            String estoque = ler.nextLine();
 
-            if(esqtoque <= 0 || valor < 0){
-                throw new OperacaoVendaException("Quantidade ou preço inválido para um produto");
+            if(!estoque.isEmpty()){
+                if(Integer.parseInt(estoque) <= 0){
+                    throw new OperacaoVendaException("Quantidade inválido para um produto");
+                }
+            }
+            if(!valor.isEmpty()){
+                if(Double.parseDouble(valor) <= 0){
+                    throw new OperacaoVendaException("preço inválido para um produto");
+                }
             }
 
-            return new Produto(nome, valor, esqtoque);
+
+            return new Produto(
+                    nome.isEmpty() ? produto.getNome() : nome,
+                    valor.isEmpty() ? produto.getValorUnitario() : Double.parseDouble(valor),
+                    estoque.isEmpty() ? produto.getQuantidade() : Integer.parseInt(estoque)
+            );
         } catch (Exception e) {
-            throw new EntradaInvalidaException("Entrada de valores inválidos");
+            throw new EntradaInvalidaException("Entrada de valores inválidos"+e.getMessage());
         }
 
     }
+
+
 
     public void mostrarConta(Vendedor vendedor, Scanner ler){
         try{

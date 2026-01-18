@@ -13,18 +13,20 @@ public class BotRunner {
         this.botService = new GerarBot();
     }
 
-    public void iniciarAutomacao(){
+    public void iniciarAutomacao(int n){
 
         Runnable tarefa = () -> {
             try {
-                if(ciclo == 0){
-                    botService.criarVendedor();
-                }
-                if(ciclo < 5){
-                    botService.criarProduto();
-                }
-                if(ciclo == 2) {
-                    botService.criarCliente();
+                if (n == 1) {
+                    if (ciclo == 0) {
+                        botService.criarVendedor();
+                    }
+                    if (ciclo < 5) {
+                        botService.criarProduto();
+                    }
+                    if (ciclo == 2) {
+                        botService.criarCliente();
+                    }
                 }
 
                 if(ciclo >= 2 ) {
@@ -35,6 +37,7 @@ public class BotRunner {
                 ciclo++;
             }catch (Exception e){
                 System.out.println(e.getMessage());
+                ciclo = 6;
             }
         };
 

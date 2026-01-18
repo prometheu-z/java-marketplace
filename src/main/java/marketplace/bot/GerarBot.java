@@ -61,7 +61,7 @@ public class GerarBot {
             }
             
         } catch (Exception e) {
-            System.out.println("criarcliente:"+e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
     
@@ -93,7 +93,8 @@ public class GerarBot {
             }
 
         } catch (Exception e) {
-            System.out.println("Erro criando vendedor");
+
+            System.out.println(e.getMessage());
         }
 
     }
@@ -106,13 +107,16 @@ public class GerarBot {
         if(vendedores.isEmpty()){
             return;
         }
+        Vendedor vendedor;
 
         Random rand = new Random();
-        int valor = rand.nextInt(vendedores.size());
-        Vendedor vendedor = vendedores.get(valor);
+        do {
+            int valor = rand.nextInt(vendedores.size());
+            vendedor = vendedores.get(valor);
+        } while (!vendedor.getEstoque().isEmpty());
 
 
-        String prompt = "Gere uma lista de 3 produtos simples de  R$: 250  ou menos para um loja fictícia chamada "+vendedor.getNomeLoja()+" em um marketplace. " +
+        String prompt = "Gere uma lista de 3 produtos simples aleatórios de  R$: 250  ou menos para um loja fictícia chamada "+vendedor.getNomeLoja()+" em um marketplace. " +
                 "Varie os objetos de acordo com o nicho: "+vendedor.getNicho()+". " +
                 "Responda APENAS com um JSON Array válido (sem markdown), neste formato: " +
                " [ { \"nome\": \"String\", \"valorUnitario\": \"Double\", \"quantidade\": \"int\" }, ... ]";
@@ -134,7 +138,8 @@ public class GerarBot {
 
 
         } catch (Exception e) {
-            System.out.println("Erro criando produto de: "+vendedor.getId());
+
+            System.out.println(e.getMessage());
         }
 
     }
@@ -144,6 +149,9 @@ public class GerarBot {
         ClientesDAO dao = new ClientesDAO();
         ProdutoDAO daoP = new ProdutoDAO();
         CompraDAO daoc = new CompraDAO();
+
+        int quantCompra = 0;
+        Produto produtoAtual;
 
         List<Cliente> clientes = dao.clientesBOT();
 
@@ -178,6 +186,7 @@ public class GerarBot {
                 int tentativas = 0;
 
                 for (Produto produto : secaoProdutos) {
+                    produtoAtual = produto;
 
                     if (tentativas >= 4) {
                         break;
@@ -185,7 +194,7 @@ public class GerarBot {
 
                     try {
                         if (produto.getQuantidade() > 0) {
-                            int quantCompra = rand.nextInt(Math.max(1, Math.min(3, produto.getQuantidade()))) + 1;
+                             quantCompra = rand.nextInt(Math.max(1, Math.min(3, produto.getQuantidade()))) + 1;
 
                             service.adicionarProduto(cliente.getId(), produto.getId_prod(), quantCompra);
                         }
@@ -199,14 +208,12 @@ public class GerarBot {
                         }
                         tentativas++;
                     } catch (Exception ignored) {
-
-                        //log
+                        System.out.println("\nO produto: "+produtoAtual.getNome()+" de id: "+produto.getId_prod() + " para a quantidade "+quantCompra+" está indisponível");
                     }
                 }
             }
         }
-        catch (Exception e) {
-            System.out.println("Erro fazendo compra de cliente: "+e.getMessage());
+        catch (Exception ignored) {
         }
 
     }
