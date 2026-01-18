@@ -53,9 +53,11 @@ public class ClienteService {
 
 
     public Cliente criarCliente(Scanner ler){
-        abreTransacao();
-        ClienteView view = new ClienteView();
+
         try {
+            abreTransacao();
+            ClienteView view = new ClienteView();
+
              Cliente cliente = view.criarCliente(ler);
              daoC.persistir(cliente);
 
@@ -80,10 +82,12 @@ public class ClienteService {
     }
 
     public Cliente atualizarCliente(Long idCliente, Scanner ler){
-        abreTransacao();
-        ClienteView view = new ClienteView();
+
 
         try{
+            abreTransacao();
+            ClienteView view = new ClienteView();
+
             Cliente cliente = daoC.buscarPorId(idCliente);
             if(cliente == null){
                 throw new ClienteInvalidoException("Cliente de código: "+ idCliente+" não encontrado");
@@ -118,11 +122,10 @@ public class ClienteService {
 
 
     public void adicionarProduto(Long idCliente, Long idProduto, int quantidade) {
-        abreTransacao();
-
 
 
         try {
+            abreTransacao();
 
             Cliente cliente = daoC.buscarPorId(idCliente);
             if(cliente == null){
@@ -134,8 +137,17 @@ public class ClienteService {
             }
 
             Produto produto = daoP.buscarPorId(idProduto);
-            if(produto == null || !produto.temEstoque(quantidade) || !produto.isAtivo() ){
-                throw new ProdutoInvalidoException("Produto de código: "+idProduto+" não encontrado/inativo ou fora de estoque");
+
+
+            if(produto == null ){
+                throw new ProdutoInvalidoException("Produto de código: "+idProduto+" não encontrado");
+            }
+            if(!produto.temEstoque(quantidade)){
+                throw new ProdutoInvalidoException("Produto fora de estoque para "+quantidade+" itens");
+            }
+
+            if(!produto.isAtivo()){
+                throw new ProdutoInvalidoException("Produto inativo");
             }
 
             Compra carrinho = daoC.compraAtiva(cliente);
@@ -163,11 +175,18 @@ public class ClienteService {
     }
 
 
-    public void finalizarCompra(Cliente cliente){
-        abreTransacao();
+    public void finalizarCompra(Long idCliente){
+
 
 
         try {
+            abreTransacao();
+
+            Cliente cliente = daoC.buscarPorId(idCliente);
+            if(cliente == null){
+                throw new ClienteInvalidoException("Cliente de código: "+ idCliente+" não encontrado");
+            }
+
             Compra carrinho = daoC.compraAtiva(cliente);
             if(carrinho == null){
                 throw new CarrinhoNuloException("O cliente não possui itens no carrinho");
@@ -193,11 +212,12 @@ public class ClienteService {
 
     public void removerProduto(Long idCliente, Long idProduto){
 
-        abreTransacao();
+
 
         try {
-            Cliente cliente = daoC.buscarPorId(idCliente);
+            abreTransacao();
 
+            Cliente cliente = daoC.buscarPorId(idCliente);
             if(cliente == null){
                 throw new ClienteInvalidoException("Cliente de código: "+ idCliente+" não encontrado");
             }
@@ -219,9 +239,8 @@ public class ClienteService {
 
 
 
-            Produto prod = itemRemover.getProduto();
-            prod.setQuantidade(prod.getQuantidade()+itemRemover.getQuantidade());
-            daoP.merge(prod);
+            produto.setQuantidade(produto.getQuantidade()+itemRemover.getQuantidade());
+            daoP.merge(produto);
 
             carrinho.removerItem(itemRemover);
 

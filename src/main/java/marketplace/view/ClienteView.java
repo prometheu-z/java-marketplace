@@ -54,6 +54,10 @@ public class ClienteView {
             String email = ler.nextLine();
             System.out.print("Crie uma senha:");
             String senha = ler.nextLine();
+
+            if(senha.length() <= 5){
+                throw new EntradaInvalidaException("Senha não pode ser menor que 5 caracteres");
+            }
             System.out.println("\nUsuário cadastrado!");
 
             return new Cliente(nome, email, senha);
@@ -94,6 +98,7 @@ public class ClienteView {
         try{
             int opcao;
             boolean naoValido = true;
+
             ClientesDAO dao = new ClientesDAO();
             ClienteService service = new ClienteService();
 
@@ -160,7 +165,7 @@ public class ClienteView {
 
 
             if (op == 1) {
-                service.finalizarCompra(cliente);
+                service.finalizarCompra(cliente.getId());
                 System.out.println("\nCompra finalizada");
                 break;
 
@@ -180,6 +185,11 @@ public class ClienteView {
     }
     public void mostrarHistorico(Cliente cliente, Scanner ler){
         ClientesDAO dao = new ClientesDAO();
+
+        //NOTE:
+        // quantidades de pagína na paginação
+        // será um número inteiro, 1/4 do número de compras, ou seja, terá 4 itens por pagina
+
         int quantPaginas = (int) Math.ceil((double) dao.numCompras(cliente) /4);
         int paginaAtual = 1;
         while (true){
@@ -235,7 +245,10 @@ public class ClienteView {
                     System.out.println("Erro: digite um número válido.");
                 }
 
-            } else {
+            } else if (op == 4){
+                break;
+            }
+            else {
                 System.out.println("Opção inválida ou indisponível.");
             }
 
@@ -245,7 +258,6 @@ public class ClienteView {
 
 
     }
-    //todo atualizar pro padrão item por pagina
     private void mostrarItens(List<ItemCompra> i){
         Iterator<ItemCompra> itens = i.iterator();
         Long idVendedor = (long) -1;

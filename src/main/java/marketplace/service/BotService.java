@@ -20,6 +20,7 @@ public class BotService {
 
 
     private String getApi_key()  {
+        // pegar chave de api de config.properties na raiz do programa
         try {
             Properties prop = new Properties();
             FileInputStream input = new FileInputStream("config.properties");

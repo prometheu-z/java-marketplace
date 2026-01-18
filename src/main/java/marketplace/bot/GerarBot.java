@@ -228,10 +228,10 @@ public class GerarBot {
             try {
                 var compra = dao.compraAtiva(cliente);
                 if (compra != null && compra.getItens() != null && !compra.getItens().isEmpty()) {
-                    service.finalizarCompra(cliente);
+                    service.finalizarCompra(cliente.getId());
                 }
 
-                service.finalizarCompra(cliente);
+                service.finalizarCompra(cliente.getId());
             } catch (Exception ignored) {
             }
         }
