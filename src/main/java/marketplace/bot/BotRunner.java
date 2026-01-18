@@ -17,29 +17,20 @@ public class BotRunner {
 
         Runnable tarefa = () -> {
             try {
-                int turno = ciclo%3;
-
-                switch (turno){
-                    case 0:
-                        botService.criarVendedor();
-                        break;
-                    case 1:
-                        botService.criarProduto();
-                        break;
-                    case 2:
-                        botService.criarCliente();
-                        break;
+                if(ciclo == 0){
+                    botService.criarVendedor();
+                }
+                if(ciclo < 5){
+                    botService.criarProduto();
+                }
+                if(ciclo == 2) {
+                    botService.criarCliente();
                 }
 
-                for (int i = 0; i < 4; i++) {
-
-                    botService.fazerCompra();
+                if(ciclo >= 2 ) {
+                    botService.fazerCompra(4);
+                    botService.finalizarCompra(3);
                 }
-                for (int i = 0; i < 3; i++) {
-
-                    botService.finalizarCompra();
-                }
-
 
                 ciclo++;
             }catch (Exception e){

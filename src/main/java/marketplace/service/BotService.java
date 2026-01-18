@@ -16,7 +16,7 @@ import java.util.Properties;
 
 public class BotService {
 
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
 
 
     private String getApi_key()  {

@@ -31,6 +31,10 @@ public class ItemCompra extends EntidadeBD{
     @Column(nullable = false)
     private String nomeProdAtual;
 
+
+    @Column(nullable = false)
+    private boolean compraFeita;
+
     public ItemCompra() {
     }
 

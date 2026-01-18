@@ -31,6 +31,7 @@ public class VendedorDAO extends DAO<Vendedor> {
         return em.createQuery(jpql, Long.class).setParameter("vendedor", vendedor.getId()).getSingleResult();
     }
 
+
     public List<Produto> itensDoEstoque(Vendedor vendedor, int inicio, int quantidade){
         String jpql = "select p from Produto p where p.vendedor.id = :vendedor and p.ativo = true order by p.vendas desc";
 
