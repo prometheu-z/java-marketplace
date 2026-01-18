@@ -179,7 +179,7 @@ public class VendedorView {
         int quantPaginas = (int) Math.ceil((double) daoV.numProdutosVendedor(vendedor) / 4);
         int paginaAtual = 1;
         while (true) {
-            List<ItemCompra> vendas = dao.getVendas(vendedor, (paginaAtual - 1) * 4, 4);
+            List<Produto> vendas = daoV.itensDoEstoque(vendedor, (paginaAtual - 1) * 4, 4);
             if (vendas.isEmpty()) {
                 throw new OperacaoVendaException("nenhum Produto vendido");
             }
@@ -188,20 +188,16 @@ public class VendedorView {
             }
             System.out.println("\n\n          Pagina: " + paginaAtual + "/" + quantPaginas);
 
-            long idProd = (long) -1;
-            for (ItemCompra item : vendas) {
-                if(idProd != -1L && Objects.equals(item.getProduto().getId_prod(), idProd)){
-                    continue;
-                }
+            for (Produto item : vendas) {
+
 
                 System.out.println("=".repeat(40));
-                System.out.print("Nome do Produto: " + item.getProduto().getNome());
-                System.out.println("        Código: " + df.format(item.getProduto().getId_prod()));
-                System.out.println("Quantidade vendida: " + item.getProduto().getVendas());
-                System.out.println("Valor das vendas: " + dao.totalVendas(item.getProduto()));
+                System.out.print("Nome do Produto: " + item.getNome());
+                System.out.println("        Código: " + df.format(item.getId_prod()));
+                System.out.println("Quantidade vendida: " + item.getVendas());
+                System.out.println("Valor das vendas: " + dao.totalVendas(item));
                 System.out.println("=".repeat(40));
 
-                idProd = item.getProduto().getId_prod();
             }
 
             System.out.println("\n");

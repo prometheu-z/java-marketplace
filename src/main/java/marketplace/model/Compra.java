@@ -39,7 +39,7 @@ public class Compra extends EntidadeBD{
     }
 
 
-    public void adicionarItem(Produto produto, Integer quantidade) {
+    public void adicionarItem(Produto produto, int quantidade) {
 
         for(ItemCompra item : this.itens){
             if(item.getProduto().getId_prod().equals(produto.getId_prod())){
@@ -63,6 +63,7 @@ public class Compra extends EntidadeBD{
     public void finalizarCompra(){
         this.horario = LocalDateTime.now();
         this.compraAtiva = false;
+
 
     }
 

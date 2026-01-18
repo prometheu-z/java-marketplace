@@ -18,10 +18,7 @@ import org.checkerframework.checker.units.qual.C;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 
 public class GerarBot {
 
@@ -79,7 +76,6 @@ public class GerarBot {
                 "\"email\": \"String\", \"senha\": \"String\", \"nicho\": \"String\" }, ... ]";
 
 
-        Vendedor vendedorC = null;
 
         try {
             String json = bot.enviarPrompt(prompt);
@@ -92,13 +88,12 @@ public class GerarBot {
             if (novosVendedores != null) {
                 novosVendedores.forEach(v -> v.setBot(true));
                 for (Vendedor vendedor : novosVendedores){
-                    vendedorC = vendedor;
                     service.criarVendedorBOT(vendedor);
                 }
             }
 
         } catch (Exception e) {
-            System.out.println("Erro criando: "+vendedorC.getId());
+            System.out.println("Erro criando vendedor");
         }
 
     }
@@ -113,13 +108,14 @@ public class GerarBot {
         }
 
         Random rand = new Random();
-        Vendedor vendedor = vendedores.get(rand.nextInt(vendedores.size()));
+        int valor = rand.nextInt(vendedores.size());
+        Vendedor vendedor = vendedores.get(valor);
 
 
-        String prompt = "Gere uma lista entre 1 a 10 produtos para um loja fictícia chamada "+vendedor.getNomeLoja()+" em um marketplace. " +
+        String prompt = "Gere uma lista de 3 produtos simples de  R$: 250  ou menos para um loja fictícia chamada "+vendedor.getNomeLoja()+" em um marketplace. " +
                 "Varie os objetos de acordo com o nicho: "+vendedor.getNicho()+". " +
                 "Responda APENAS com um JSON Array válido (sem markdown), neste formato: " +
-                "\"nome\": \"String\", \"valorUnitario\": \"Double\", \"quantidade\": \"int\" }, ... ]";
+               " [ { \"nome\": \"String\", \"valorUnitario\": \"Double\", \"quantidade\": \"int\" }, ... ]";
 
         try {
             String json = bot.enviarPrompt(prompt);
@@ -143,7 +139,7 @@ public class GerarBot {
 
     }
 
-    public void fazerCompra(){
+    public void fazerCompra(int quantidade){
         ClienteService service = new ClienteService();
         ClientesDAO dao = new ClientesDAO();
         ProdutoDAO daoP = new ProdutoDAO();
@@ -154,91 +150,92 @@ public class GerarBot {
         if(clientes.isEmpty()){
             return;
         }
-        Random rand = new Random();
-
-        Cliente cliente = clientes.get(rand.nextInt(clientes.size()));
-
+        Collections.shuffle(clientes);
+        List<Cliente> clientesSelecionados = clientes.subList(0, Math.min(quantidade, clientes.size()));
 
         long totalProdutos = daoP.numProdutos();
-
-
         if (totalProdutos == 0) {
             return;
         }
 
+        Random rand = new Random();
+
 
 
         try {
-            long secaoAleLong = rand.nextLong(totalProdutos/2);
-
-            int secaoAle = (int) secaoAleLong;
-            int fimAle= secaoAle+secaoAle/2;
-
-            if(totalProdutos <= 4){
-                secaoAle = 0;
-                fimAle = (int ) totalProdutos;
-            }
-
-            List<Produto> novosProdutos = daoP.listarProdutos(secaoAle, fimAle);
+            long secaoAleLong = (totalProdutos > 10) ? rand.nextLong(totalProdutos - 5) : 0;
 
 
-            if (novosProdutos == null) {
+            List<Produto> secaoProdutos = daoP.listarProdutos((int) secaoAleLong, (int) secaoAleLong + 10);
+            if (secaoProdutos == null || secaoProdutos.isEmpty()) {
                 return;
             }
 
-            int cont = 0;
-            for(Produto produto : novosProdutos){
-                if(cont >4){
-                    break;
+
+            for (Cliente cliente : clientesSelecionados) {
+
+                Collections.shuffle(secaoProdutos);
+                int tentativas = 0;
+
+                for (Produto produto : secaoProdutos) {
+
+                    if (tentativas >= 4) {
+                        break;
+                    }
+
+                    try {
+                        if (produto.getQuantidade() > 0) {
+                            int quantCompra = rand.nextInt(Math.max(1, Math.min(3, produto.getQuantidade()))) + 1;
+
+                            service.adicionarProduto(cliente.getId(), produto.getId_prod(), quantCompra);
+                        }
+                        var compraAtiva = dao.compraAtiva(cliente);
+                        if (compraAtiva != null) {
+                            var item = daoc.itemPeloProduto(compraAtiva, produto.getId_prod());
+                            if (item != null) {
+                                item.setBot(true);
+                                daoc.merge(compraAtiva);
+                            }
+                        }
+                        tentativas++;
+                    } catch (Exception ignored) {
+
+                        //log
+                    }
                 }
-                int quant = rand.nextInt(produto.getQuantidade())+1;
-
-
-
-                service.adicionarProduto(cliente.getId(), produto.getId_prod(), quant);
-
-
-                daoc.itemPeloProduto(dao.compraAtiva(cliente), produto.getId_prod()).setBot(true);
-                cont ++;
-
-                daoc.merge(dao.compraAtiva(cliente));
             }
-
-
-
-        } catch (ProdutoInvalidoException e){
-            System.out.println(e.getMessage());
         }
         catch (Exception e) {
-            System.out.println("Erro fazendo compra de cliente: "+cliente.getId()+" "+e.getMessage());
+            System.out.println("Erro fazendo compra de cliente: "+e.getMessage());
         }
 
     }
 
-    public void finalizarCompra(){
+    public void finalizarCompra(int quantidade){
         ClienteService service = new ClienteService();
         ClientesDAO dao = new ClientesDAO();
 
-        List<Cliente> clientes = dao.clientesCompraAtivaBOT();
+        List<Cliente> clientesAtivos = dao.clientesCompraAtivaBOT();
 
+        if (clientesAtivos.isEmpty()) return;
 
-        if(clientes.isEmpty()){
-            return;
-        }
+        Collections.shuffle(clientesAtivos);
 
-        Random rand = new Random();
+        int limite = Math.min(quantidade, clientesAtivos.size());
 
-        while (true) {
-
-            Cliente cliente = clientes.get(rand.nextInt(clientes.size()));
-
+        for (int i = 0; i < limite; i++) {
+            Cliente cliente = clientesAtivos.get(i);
             try {
+                var compra = dao.compraAtiva(cliente);
+                if (compra != null && compra.getItens() != null && !compra.getItens().isEmpty()) {
+                    service.finalizarCompra(cliente);
+                }
 
                 service.finalizarCompra(cliente);
-                break;
             } catch (Exception ignored) {
             }
         }
+
 
     }
 
