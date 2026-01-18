@@ -13,7 +13,6 @@ Um sistema de vendas em Java Puro via **CLI** onde usuários reais (ou bots) com
 O foco principal é o gerenciamento de Concorrência e Condições de Corrida (Race Conditions) em um ambiente transacional.
 
 ### IA & Simulação
-Diferente de um CRUD tradicional, este sistema simula um mercado vivo:
 * Geração: Perfis de clientes, vendedores e produtos são criados via Google Gemini API.
 * Bots Autônomos: O sistema instancia threads de bots que "acordam", analisam o mercado e efetuam compras em tempo real.
 * Disputa de Estoque: O usuário compete com esses bots. O banco de dados garante (via transações ACID) que um item não seja vendido duas vezes no mesmo milissegundo.
@@ -65,13 +64,13 @@ Crie um arquivo chamado `config.properties` na raiz do projeto (onde está o `po
 
 gemini.api.key=SUA_CHAVE_AQUI
 
-### 3. EXECUTAR
+### 3. Executar
 
 Abra o terminal na pasta do projeto e rode o comando abaixo. 
 
 **docker compose run --service-ports app**
 
-### 4. PARAR E LIMPAR
+### 4. Parar e limpar
 
 Para encerrar o banco de dados e limpar os containers criados:
 
