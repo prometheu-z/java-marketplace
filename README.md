@@ -35,17 +35,17 @@ O projeto segue uma adaptação do padrão MVC focado em aplicações CLI e micr
 
 ```mermaid
 graph TD
-    User([ Usuário Real]) -->|Interage| View[ Camada View (CLI)]
+    User([ Usuário ]) -->|Interage| View[ Camada View (CLI)]
     Bot([ Bot Gemini AI]) -->|Thread Paralela| Service
     
     subgraph Core Application
-        View -->|Chama| Service[ Service ]
-        Service -->|Regras de Negócio| Model[Entidades]
+        View -->|Chama| Service[ Service Layer]
+        Service -->|Regras de Negócio| Model[ Entidades ]
         Service -->|Persistência| DAO[ DAO Layer]
     end
     
     subgraph External Systems
-        Service <-->|Gera Entidades| Gemini[Google Gemini API]
+        Service <-->|Gera Entidades| Gemini[ Google Gemini API]
         DAO <-->|SQL| MySQL[( MySQL Database)]
     end
 ```
