@@ -16,6 +16,11 @@ public class ProdutoDAO extends DAO<Produto> {
 
 
 
+    public int vendasProduto(Long idProduto){
+        String jpql = "select p from Produto p where p.id = :produoto";
+        return em.createQuery(jpql, Integer.class).setParameter("produto", idProduto).getSingleResult();
+    }
+
 
     public Long numProdutos(){
         String jpql = "select Count(p) from Produto p where p.ativo = true and p.quantidade > 0";

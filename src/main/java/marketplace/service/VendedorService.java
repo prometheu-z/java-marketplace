@@ -81,8 +81,8 @@ public class VendedorService {
             return vendedor;
 
         }catch (EntradaInvalidaException e){
-            System.out.println("Operação cancelada: "+e.getMessage() );
             desfazerTransacao();
+            throw new OperacaoVendaException("Operação cancelada: "+e.getMessage() );
         } catch (RuntimeException e){
             desfazerTransacao();
 
@@ -92,7 +92,6 @@ public class VendedorService {
 
             throw new OperacaoVendaException("Não foi possível criar a loja", e);
         }
-        return null;
     }
     public Vendedor alterarVendedor(Long idVendedor, Scanner ler){
 

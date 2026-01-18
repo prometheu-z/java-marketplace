@@ -71,11 +71,12 @@ public class BotService {
                 return extrair(response.body());
             }
             else {
-                System.out.println(response.body());
-                return null;
+                throw new Exception("A cota diária de sua api expirou, crie uma nova para um novo projeto, pelo link: https://aistudio.google.com");
             }
         } catch (IOException | InterruptedException e) {
             return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
     }

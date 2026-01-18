@@ -165,7 +165,7 @@ public class ProdutoView {
                 System.out.print("Nome: "+produto.getNome());
                 System.out.println("        Valor: " + produto.getValorUnitario());
                 System.out.print("Código: " + df.format(produto.getId_prod()));
-                System.out.println("        Vendidos: " + produto.getVendas());
+                System.out.println("        Vendidos: " + dao.vendasProduto(produto.getId_prod()));
                 System.out.println("Disponíveis: "+produto.getQuantidade());
                 System.out.println("=".repeat(40));
             }

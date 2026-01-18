@@ -55,9 +55,7 @@ public class ClienteView {
             System.out.print("Crie uma senha:");
             String senha = ler.nextLine();
 
-            if(senha.length() <= 5){
-                throw new EntradaInvalidaException("Senha não pode ser menor que 5 caracteres");
-            }
+
             System.out.println("\nUsuário cadastrado!");
 
             return new Cliente(nome, email, senha);

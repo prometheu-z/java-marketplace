@@ -65,6 +65,8 @@ public class Main {
 
                                 logado = vendedor;
                             }
+
+                            botR.iniciarAutomacao(0);
                             naoValido = false;
                         } catch (EntradaInvalidaException | ClienteInvalidoException | VendedorNuloExcception e) {
                             System.out.println(e.getMessage());
@@ -79,8 +81,9 @@ public class Main {
                     while (naoValido) {
                         try {
                             logado = vendaService.criarVendedor(ler);
-                            botR.iniciarAutomacao();
                             naoValido = false;
+
+                            botR.iniciarAutomacao(1);
                         } catch (OperacaoVendaException e) {
                             System.out.println(e.getMessage());
                             naoValido = tentarNovamente(ler);
@@ -94,8 +97,9 @@ public class Main {
                         try {
 
                             logado = clienteService.criarCliente(ler);
-                            botR.iniciarAutomacao();
                             naoValido = false;
+
+                            botR.iniciarAutomacao(1);
                         } catch (OperacaoCompraException e) {
                             System.out.println(e.getMessage());
                             naoValido = tentarNovamente(ler);
