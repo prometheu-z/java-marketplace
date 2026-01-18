@@ -58,13 +58,11 @@ public class Main {
                                 Cliente cliente = clienteView.login(ler);
                                 System.out.println("Login bem sucedido, Bem vindo " + cliente.getNome());
 
-                                botR.iniciarAutomacao();
                                 logado = cliente;
                             } else {
                                 Vendedor vendedor = vendedorView.login(ler);
                                 System.out.println("Login bem sucedido, Bem vindo " + vendedor.getNomeLoja());
 
-                                botR.iniciarAutomacao();
                                 logado = vendedor;
                             }
                             naoValido = false;

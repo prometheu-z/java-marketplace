@@ -64,10 +64,12 @@ public class VendedorService {
     }
 
     public Vendedor criarVendedor(Scanner ler){
-        abreTransacao();
 
-        VendedorView view = new VendedorView();
         try {
+            abreTransacao();
+
+            VendedorView view = new VendedorView();
+
             Vendedor vendedor = view.criarVendedor(ler);
 
             daoV.persistir(vendedor);
@@ -93,10 +95,11 @@ public class VendedorService {
         return null;
     }
     public Vendedor alterarVendedor(Long idVendedor, Scanner ler){
-        abreTransacao();
 
-        VendedorView view = new VendedorView();
         try {
+            abreTransacao();
+            VendedorView view = new VendedorView();
+
             Vendedor vendedor = daoV.buscarPorId(idVendedor);
             if(vendedor == null){
                 throw new VendedorNuloExcception("Vendedor de id: "+idVendedor+", não encontrado");
@@ -111,9 +114,7 @@ public class VendedorService {
 
             fechaTransacao();
 
-            System.out.println("Loja "+vendedor.getNomeLoja()+
-
-                    " atualizada");
+            System.out.println("Loja "+vendedor.getNomeLoja()+ " atualizada");
 
             return vendedor;
 
@@ -135,10 +136,11 @@ public class VendedorService {
 
     public void criarProduto(Long idVendedor, Scanner ler){
 
-        abreTransacao();
 
-        VendedorView view = new VendedorView();
+
         try {
+            abreTransacao();
+            VendedorView view = new VendedorView();
 
             Vendedor vendedor = daoV.buscarPorId(idVendedor);
             if(vendedor == null){
@@ -146,6 +148,7 @@ public class VendedorService {
             }
 
             Produto produto = view.criarProduto(ler);
+
             vendedor.adicionarEstoque(produto);
             daoP.persistir(produto);
 
@@ -164,9 +167,11 @@ public class VendedorService {
         }
     }
     public void excluirProduto(Long idVendedor, Long idProduto){
-        abreTransacao();
 
         try {
+
+            abreTransacao();
+
             Vendedor vendedor = daoV.buscarPorId(idVendedor);
             if(vendedor == null){
                 throw new VendedorNuloExcception("Vendedor de id: "+idVendedor+", não encontrado");
@@ -182,9 +187,12 @@ public class VendedorService {
 
             vendedor.removerEstoque(produto);
 
+
             daoP.remover(produto);
 
             fechaTransacao();
+
+            System.out.println("produto "+produto.getNome()+" removido");
 
         } catch (RuntimeException e){
             desfazerTransacao();
@@ -201,9 +209,11 @@ public class VendedorService {
     }
 
     public void atualizarProduto(Long idVendedor, Long idProduto, Scanner ler){
-        abreTransacao();
-        VendedorView view = new VendedorView();
+
         try {
+            abreTransacao();
+            VendedorView view = new VendedorView();
+
             Vendedor vendedor = daoV.buscarPorId(idVendedor);
             if(vendedor == null){
                 throw new VendedorNuloExcception("Vendedor de id: "+idVendedor+", não encontrado");

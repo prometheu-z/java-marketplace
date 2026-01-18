@@ -41,6 +41,8 @@ public class Compra extends EntidadeBD{
 
     public void adicionarItem(Produto produto, int quantidade) {
 
+        //caso adicione um item que já esteja no carrinho
+
         for(ItemCompra item : this.itens){
             if(item.getProduto().getId_prod().equals(produto.getId_prod())){
                 item.setQuantidade(item.getQuantidade() + quantidade);
@@ -59,7 +61,6 @@ public class Compra extends EntidadeBD{
         this.valorTotal -= item.getQuantidade() * item.getValorAtual();
     }
 
-    // adicionar exceçao de venda vazia
     public void finalizarCompra(){
         this.horario = LocalDateTime.now();
         this.compraAtiva = false;
