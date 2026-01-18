@@ -4,6 +4,7 @@ Um sistema de vendas em Java Puro via **CLI** onde usuários reais (ou bots) com
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
 ![Gemini AI](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=googlebard&logoColor=white)
 
@@ -26,57 +27,28 @@ Diferente de um CRUD tradicional, este sistema simula um mercado vivo:
 * **Maven**: Gerenciamento de dependências e Build.
 * **Google Gemini API**: Inteligência Artificial Generativa.
 
-## Arquitetura
+## Arquitetura do Sistema
 
-└── prometheu-z-java-marketplace/
-    └── src/
-        ├── main/
-        │   ├── java/
-        │   │   └── marketplace/
-        │   │       ├── Main.java
-        │   │       ├── bot/
-        │   │       │   ├── BotRunner.java
-        │   │       │   └── GerarBot.java
-        │   │       ├── dao/
-        │   │       │   ├── ClientesDAO.java
-        │   │       │   ├── CompraDAO.java
-        │   │       │   ├── DAO.java
-        │   │       │   ├── ProdutoDAO.java
-        │   │       │   └── VendedorDAO.java
-        │   │       ├── exceptions/
-        │   │       │   ├── CarrinhoNuloException.java
-        │   │       │   ├── ClienteInvalidoException.java
-        │   │       │   ├── EntradaInvalidaException.java
-        │   │       │   ├── OperacaoCompraException.java
-        │   │       │   ├── OperacaoVendaException.java
-        │   │       │   ├── ProdutoInvalidoException.java
-        │   │       │   └── VendedorNuloExcception.java
-        │   │       ├── model/
-        │   │       │   ├── Cliente.java
-        │   │       │   ├── Compra.java
-        │   │       │   ├── EntidadeBD.java
-        │   │       │   ├── ItemCompra.java
-        │   │       │   ├── Produto.java
-        │   │       │   └── Vendedor.java
-        │   │       ├── service/
-        │   │       │   ├── BotService.java
-        │   │       │   ├── ClienteService.java
-        │   │       │   └── VendedorService.java
-        │   │       └── view/
-        │   │           ├── ClienteView.java
-        │   │           ├── ProdutoView.java
-        │   │           └── VendedorView.java
-        │   └── resources/
-        │       └── META-INF/
-        │           └── persistence.xml
-        └── test/
-            └── java/
-                └── marketplace/
-                    └── model/
-                        ├── ClienteTest.java
-                        ├── CompraTest.java
-                        └── ProdutoTest.java
+O projeto segue uma adaptação do padrão MVC focado em aplicações CLI e microsserviços simulados (Bots).
 
+### Estrutura  
+
+```mermaid
+graph TD
+    User([ Usuário Real]) -->|Interage| View[ Camada View CLI]
+    Bot([ Bot Gemini AI]) -->|Thread Paralela| Service
+    
+    subgraph Core Application
+        View -->|Chama| Service[ Service Layer]
+        Service -->|Regras de Negócio| Model[ Model / Entidades]
+        Service -->|Persistência| DAO[ DAO Layer]
+    end
+    
+    subgraph External Systems
+        Service <-->|Gera Personas| Gemini[✨Google Gemini API]
+        DAO <-->|SQL| MySQL[( MySQL Database)]
+    end
+```
 ---
 
 ## Como Rodar (Via Docker)
