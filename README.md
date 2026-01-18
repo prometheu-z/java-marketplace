@@ -35,7 +35,7 @@ O projeto segue uma adaptação do padrão MVC focado em aplicações CLI e micr
 
 ```mermaid
 graph TD
-    User([ Usuário ]) -->|Interage| View[ Camada View (CLI)]
+    User([ Usuário ]) -->|Interage| View[ Camada View CLI]
     Bot([ Bot Gemini AI]) -->|Thread Paralela| Service
     
     subgraph Core Application
