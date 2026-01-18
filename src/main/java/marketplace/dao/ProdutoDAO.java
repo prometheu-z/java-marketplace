@@ -17,7 +17,7 @@ public class ProdutoDAO extends DAO<Produto> {
 
 
     public int vendasProduto(Long idProduto){
-        String jpql = "select p from Produto p where p.id = :produoto";
+        String jpql = "select p.vendas from Produto p where p.id = :produto";
         return em.createQuery(jpql, Integer.class).setParameter("produto", idProduto).getSingleResult();
     }
 
