@@ -45,7 +45,7 @@ graph TD
     end
     
     subgraph External Systems
-        Service <-->|Gera Personas| Gemini[✨Google Gemini API]
+        Service <-->|Gera Entidades| Gemini[Google Gemini API]
         DAO <-->|SQL| MySQL[( MySQL Database)]
     end
 ```
